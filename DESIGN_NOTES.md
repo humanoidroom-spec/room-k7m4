@@ -96,3 +96,8 @@ All uncertain content is editable in `src/data/project.ts`. No scientific conclu
 Vite + React + TypeScript was chosen because there was no existing website and the deliverable is static. There are no animation, charting or UI framework dependencies. Production builds prerender the full page to static HTML and hydrate it in the browser. Charts are HTML with readable numeric values; a native table retains the complete benchmark. Controls are real buttons with pressed states, visible keyboard focus, touch sizing, and live descriptions. The mobile nav supports Escape and closes on navigation. Reduced-motion preferences disable transitions/reveals and autoplay. Fonts are self-hosted WOFF2 with swap and OFL notices. Images use explicit sizing or stable media containers, modern WebP and lazy loading; the hero is prioritized.
 
 A private Sites preview is used for review. Public paper/code/dataset release is controlled by the author; the site does not announce acceptance or invent release destinations.
+
+
+## Password-protected V2 preview
+
+Only the current silver-blue design is shared, behind a server-validated password. The entry screen follows its silver/blue palette and contains only a password form. V2 retains its research narrative and numerical data. Paper download actions are removed; the manuscript and the immutable V1 snapshot have moved to the offline archive. The deployment has no public static asset directory: all bundled page, image, CSS and JavaScript requests pass through the same password/session check.

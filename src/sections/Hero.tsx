@@ -1,4 +1,4 @@
-import { project, asset } from "../data/project";
+import { project } from "../data/project";
 import { Arrow, ResearchMedia } from "../components/Primitives";
 
 function SignalDiagram() {
@@ -72,14 +72,12 @@ export default function Hero() {
             <div className="hero-actions">
               <a
                 className="button primary"
-                href={project.links.arxiv ?? asset(project.links.paper)}
-                target="_blank"
-                rel="noreferrer"
+                href="#tasks"
               >
-                Read the paper <Arrow diagonal />
+                Explore interactions <Arrow diagonal />
               </a>
-              <a className="text-link hero-explore" href="#tasks">
-                Explore the interactions <Arrow />
+              <a className="text-link hero-explore" href="#experiments">
+                View the benchmark <Arrow />
               </a>
             </div>
           </div>

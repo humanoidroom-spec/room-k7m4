@@ -6,7 +6,7 @@ A responsive, research-first project page for **ROOM: A Human–Humanoid Interac
 ## Design versions
 
 - **Version 2 (current):** silver-blue hero, a nonverbal-to-action diagram, alternating light research panels and deep-blue technical sections.
-- **Version 1 (preserved):** the original charcoal/orange design, available at `versions/v1/` relative to the site root. The complete static snapshot is in `public/versions/v1/`; its source is tagged `v1` in Git.
+- **Version 1 (preserved):** the original charcoal/orange design, kept offline. The complete static snapshot is in `archive/versions/v1/`; its source is tagged `v1` in Git.
 
 The snapshot is immutable. Do not replace its files when changing the current website. Both versions retain their own styles, scripts and assets so they can be reviewed independently. See `VERSIONS.md` for the source reference.
 
@@ -19,14 +19,24 @@ npm install
 npm run dev
 ```
 
-Open the local URL printed by Vite.
+Open the local URL printed by the preview server. It creates a temporary local-only password unless the two runtime secrets are supplied. `npm run dev:ui` is an unprotected, loopback-only UI editing server; never use it for sharing.
 
 ```bash
 npm run build
 npm run preview
 ```
 
-`dist/` is the complete static deployment artifact. The build prerenders the complete research content into HTML before React adds interactivity, so the manuscript narrative and values are available without waiting for JavaScript. It works on Sites, GitHub Pages, Cloudflare Pages, Netlify, Vercel static hosting, or an ordinary web server. Vite uses a relative base so assets also work below a repository subpath. No server, API keys, database, or paid service is required.
+`dist/server/index.js` is the complete Cloudflare-compatible Worker. The page is prerendered and bundled together with its allowed images, scripts and fonts inside the Worker; there is no separately served static directory. Every V2 resource is authenticated before it is returned. PDFs, old versions and local source files are excluded from the deployment.
+
+## Password access
+
+Sites remains publicly reachable at the platform level so friends can use a shared password without a ChatGPT login. The Worker validates that password server-side, then issues an HttpOnly, Secure, SameSite=Strict cookie valid for 8 hours. The **Lock preview** button clears that browser cookie. All page and asset responses use `no-store`; no password or verifier is embedded in the frontend.
+
+Configure `ROOM_PASSWORD_VERIFIER` and `ROOM_SESSION_SECRET` as **secret** runtime values in Sites, then deploy. The first value is a salted PBKDF2-HMAC-SHA256 verifier, the second is 32 random bytes encoded as base64url. Generate them with `server/auth.mjs` and a cryptographically secure RNG. Do not commit production secrets or passwords. Missing secrets fail closed. Rotating either value and redeploying invalidates existing sessions.
+
+The generated shared password has 192 bits of random entropy. A bounded per-isolate throttle also limits attempts; it is not a persistent global rate limiter. Anyone who receives the password can share it with others.
+
+Run `npm run build` followed by `npm test` to verify the protected bundle, asset gating, cookie tampering and expiry, password rotation, CSRF checks, and PDF/V1 exclusion.
 
 ## Content and project links
 
@@ -38,13 +48,13 @@ Edit **`src/data/project.ts`**:
 - `models`, `benchmark`, `failureResults`, `study`: all plotted values and original denominators.
 - `draftNotes`: discrepancies that need author confirmation.
 
-The paper link currently opens `public/room-paper.pdf`. Set real code/dataset URLs when released; `null` produces a clear “Coming soon” state. Hero and resource links share this configuration. No accepted venue or publication year is inferred from the PDF filename.
+The manuscript is not shared in this preview: `project.links.paper` is null, and the copy is kept outside public assets at `archive/room-paper.pdf`. Paper download links have been removed. Code and dataset links remain unreleased. No accepted venue or publication year is inferred from the PDF filename.
 
 ## Assets and videos
 
 - `public/assets/`: optimized WebP crops extracted from the PDF; no generated or unrelated robotics imagery.
 - `public/fonts/`: self-hosted DM Sans and IBM Plex Mono plus their OFL licenses.
-- `public/room-paper.pdf`: an unmodified copy of the supplied manuscript.
+- `archive/room-paper.pdf`: an unmodified offline copy of the supplied manuscript; never deployed.
 - `public/videos/`: add real, muted-compatible demo footage using these exact filenames:
 
 | Placement | Filename (either extension) |
@@ -69,7 +79,12 @@ public/
   assets/       Real paper figures and clean crops
   fonts/        WOFF2 fonts and licenses
   videos/       Optional experiment footage
+server/         Server-side password verification, sessions and protected responses
+archive/        Offline V1 snapshot and manuscript; never packaged
+tests/          Access-control and deployment-boundary checks
 scripts/
+  build-protected.mjs  Bundle allowed V2 assets inside the Worker
+  preview.mjs   Run the same Worker locally
   extract_assets.py  Reproducible PDF extraction and crop coordinates
 ```
 

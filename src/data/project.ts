@@ -6,7 +6,7 @@ export const project = {
   expansion: 'Referential and Ongoing-interaction Observations for Manipulation',
   authors: 'Anonymous Authors',
   status: 'Research manuscript',
-  links: { paper: 'room-paper.pdf', code: null as string | null, dataset: null as string | null, arxiv: null as string | null },
+  links: { paper: null as string | null, code: null as string | null, dataset: null as string | null, arxiv: null as string | null },
   stats: [
     { value: '2.5k', label: 'Demonstrations', source: '§III-A' },
     { value: '40', label: 'Interaction tasks', source: '§III-A' },

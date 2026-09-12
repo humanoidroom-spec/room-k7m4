@@ -37,6 +37,7 @@ body {
   color: #245cdd;
 }
 .nav-paper {
+  cursor: pointer;
   border: 1px solid #b9c9df;
   padding: 10px 15px;
   border-radius: 5px;
