@@ -1,4 +1,4 @@
-import { configured, issueSession, sessionCookie, validSession, verifyPassword } from './auth.mjs';
+import { configured, issueSession, sessionCookie, validSession, verifyPassword, toBase64Url } from './auth.mjs';
 import { gatePage } from './gate.mjs';
 
 const COMMON_HEADERS = {
@@ -19,7 +19,11 @@ function response(body, status = 200, headers = {}) {
 }
 
 function gate(message = '', status = 200, unavailable = false) {
-  return response(gatePage(message, unavailable), status, { 'Content-Type': 'text/html; charset=utf-8' });
+  const nonce = toBase64Url(crypto.getRandomValues(new Uint8Array(16)));
+  return response(gatePage(message, unavailable, nonce), status, {
+    'Content-Type': 'text/html; charset=utf-8',
+    'Content-Security-Policy': COMMON_HEADERS['Content-Security-Policy'].replace("script-src 'self'", `script-src 'nonce-${nonce}'`),
+  });
 }
 
 async function limitedBody(request) {
@@ -82,8 +86,12 @@ export function createWorker(assets) {
         const body = await limitedBody(request);
         if (body === null) return response('Request too large.', 413);
         const values = new URLSearchParams(body).getAll('password');
-        if (values.length !== 1 || !await verifyPassword(values[0], env.ROOM_PASSWORD_VERIFIER)) return gate('Incorrect password. Please try again.', 401);
+        const json = request.headers.get('Accept')?.includes('application/json');
+        if (values.length !== 1 || !await verifyPassword(values[0], env.ROOM_PASSWORD_VERIFIER)) {
+          return json ? response('{"ok":false}', 401, { 'Content-Type': 'application/json' }) : gate('Incorrect password. Please try again.', 401);
+        }
         const token = await issueSession(env, url.origin);
+        if (json) return response('{"ok":true}', 200, { 'Content-Type': 'application/json', 'Set-Cookie': sessionCookie(token) });
         return response(null, 303, { 'Location': '/', 'Set-Cookie': sessionCookie(token) });
       }
       if (!['GET', 'HEAD'].includes(request.method)) return response('Method not allowed.', 405, { 'Allow': 'GET, HEAD' });

@@ -65,6 +65,20 @@ test('tampered, expired, wrong-origin and duplicated cookies cannot unlock conte
   assert.equal((await worker.fetch(request('/assets/test.js', { headers: { Cookie: `${COOKIE_NAME}=${good}` } }), rotated)).status, 401);
 });
 
+test('browser fetch submission returns JSON with the same secure cookie and nonce policy', async () => {
+  const worker = createWorker(assets);
+  const wrong = await login(worker, 'incorrect', { headers: { Accept: 'application/json' } });
+  assert.equal(wrong.status, 401);
+  const result = await login(worker, password, { headers: { Accept: 'application/json' } });
+  assert.equal(result.status, 200);
+  assert.deepEqual(await result.json(), { ok: true });
+  assert.match(result.headers.get('Set-Cookie'), /HttpOnly/);
+  const gate = await worker.fetch(request(), env);
+  const html = await gate.text();
+  const nonce = html.match(/<script nonce="([^"]+)"/)[1];
+  assert.ok(gate.headers.get('Content-Security-Policy').includes(`'nonce-${nonce}'`));
+});
+
 test('cross-site submissions, oversized bodies and bursts are rejected; logout clears the cookie', async () => {
   const worker = createWorker(assets);
   assert.equal((await login(worker, password, { headers: { Origin: 'https://attacker.example' } })).status, 403);
