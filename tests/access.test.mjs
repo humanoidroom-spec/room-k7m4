@@ -105,16 +105,16 @@ test('missing secrets fail closed', async () => {
   assert.equal((await createWorker(assets).fetch(request(), {})).status, 503);
 });
 
-test('production bundle contains only protected V2; all referenced page assets pass through the gate', async () => {
+test('production bundle contains only protected V3; all referenced page assets pass through the gate', async () => {
   const dirs = await readdir(new URL('../dist/', import.meta.url));
   assert.deepEqual(dirs.sort(), ['.openai', 'server']);
   const unlocked = await login(builtWorker);
   assert.equal(unlocked.status, 303);
   const headers = { Cookie: cookie(unlocked) };
   const page = await builtWorker.fetch(request(), env);
-  assert.doesNotMatch(await page.text(), /hero-signal-system|Human gaze\. Human gesture/);
+  assert.doesNotMatch(await page.text(), /hero-v3|Human gaze\. Human gesture/);
   const html = await (await builtWorker.fetch(request('/', { headers }), env)).text();
-  assert.match(html, /hero-signal-system/);
+  assert.match(html, /hero-v3/);
   assert.doesNotMatch(html, /href=["'][^"']*\.pdf/i);
   const urls = new Set([...html.matchAll(/(?:src|href)="([^"#]+)"/g)].map(match => match[1]).filter(value => !/^https?:/.test(value)));
   for (const value of urls) {

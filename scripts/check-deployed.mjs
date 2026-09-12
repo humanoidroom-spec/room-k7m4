@@ -41,7 +41,7 @@ async function fetchWithCurl(path, { method = 'GET', headers = {}, body } = {}) 
 const publicPage = await fetchWithCurl('/');
 assert.equal(publicPage.status, 200, 'Password gate must be publicly reachable');
 assert.match(publicPage.body, /type="password"/);
-assert.doesNotMatch(publicPage.body, /hero-signal-system|Human gaze\. Human gesture/);
+assert.doesNotMatch(publicPage.body, /hero-v3|Human gaze\. Human gesture/);
 assert.match(publicPage.headers.get('Cache-Control'), /no-store/);
 console.log('PASS anonymous visitors see only the password gate');
 
@@ -55,9 +55,9 @@ assert.ok(cookie?.includes('HttpOnly') && cookie.includes('Secure') && cookie.in
 const authHeaders = { Cookie: cookie.split(';')[0] };
 const page = await fetchWithCurl('/', { headers: authHeaders });
 assert.equal(page.status, 200);
-assert.match(page.body, /hero-signal-system/);
+assert.match(page.body, /hero-v3/);
 assert.doesNotMatch(page.body, /href=["'][^"']*\.pdf/i);
-console.log('PASS correct password reveals V2 and incorrect password is rejected');
+console.log('PASS correct password reveals V3 and incorrect password is rejected');
 
 const assetPath = new URL(page.body.match(/src="([^" ]+\.js)"/)[1], origin + '/').pathname;
 assert.equal((await fetchWithCurl(assetPath)).status, 401);

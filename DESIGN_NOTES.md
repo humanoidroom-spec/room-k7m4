@@ -1,8 +1,18 @@
 # ROOM — design and research notes
 
-## Version 2 — current design
+## Version 3 — current design
 
-Version 1 is retained as the Git tag `v1` and an independent static snapshot under `public/versions/v1/`. Research claims, all numerical results, source images and the original caveats remain unchanged.
+Visual reference: https://behavior-robot-suite.github.io/. V3 adopts the reference’s reading rhythm: a large experiment-led opening, centered academic project information, an image-led interaction gallery, and clearly separated research questions. No reference-site source code, template, imagery, results, institutional marks or author identities were copied.
+
+ROOM has its own composition: one framed panoramic experiment image with an editorial research question, a three-signal strip, a large ROOM wordmark, deep-teal and sage colors, serif display typography, and a split task viewer that connects human cues to robot responses. The reference’s video mosaic, maroon palette and exact layout are not reproduced. Available manuscript frames are shown honestly as images; no fabricated demo videos or decorative playback controls are added.
+
+The entire page has a new responsive style sheet, including the existing dataset explorer, representation selector, benchmark charts, failure analysis and human study. All numerical data and source caveats remain unchanged. V2 is preserved as Git tag `v2` and an offline protected Worker archive. Only V3 is deployed, with the existing server-side password, asset checks and PDF/archive exclusion. The password gate uses the new palette.
+
+V3 validation: production build and eight access-control tests pass. Browser review covers the 1470 px desktop layout, 390 px mobile layout and 768 px tablet width; task selection, gallery arrows, model changes, human-signal selection and mobile navigation work. Page width stays within the viewport; original scientific data are unchanged. Secondary study labels and baseline values were darkened after visual review.
+
+## Version 2 — preserved design
+
+Version 1 is retained as the Git tag `v1` and an independent static snapshot under `archive/versions/v1/`. Research claims, all numerical results, source images and the original caveats remain unchanged.
 
 The new visual thesis is a robotics research instrument under cool studio light: silver and ice-blue surfaces, ink-blue typography, a restrained cobalt accent, and deep-blue technical sections. The hero now combines the research question with a small, explicitly conceptual diagram of gaze / gesture / body behavior feeding ROOM and informing robot action. A faint coordinate grid gives the hero and method section spatial structure. It is a visual explanation, not a simulated recording or a measured trajectory.
 
@@ -95,7 +105,7 @@ All uncertain content is editable in `src/data/project.ts`. No scientific conclu
 
 Vite + React + TypeScript was chosen because there was no existing website and the deliverable is static. There are no animation, charting or UI framework dependencies. Production builds prerender the full page to static HTML and hydrate it in the browser. Charts are HTML with readable numeric values; a native table retains the complete benchmark. Controls are real buttons with pressed states, visible keyboard focus, touch sizing, and live descriptions. The mobile nav supports Escape and closes on navigation. Reduced-motion preferences disable transitions/reveals and autoplay. Fonts are self-hosted WOFF2 with swap and OFL notices. Images use explicit sizing or stable media containers, modern WebP and lazy loading; the hero is prioritized.
 
-A private Sites preview is used for review. Public paper/code/dataset release is controlled by the author; the site does not announce acceptance or invent release destinations.
+A server-password-protected Sites preview is used for review. Public paper/code/dataset release is controlled by the author; the site does not announce acceptance or invent release destinations.
 
 
 ## Password-protected V2 preview

@@ -22,10 +22,10 @@ async function collect(directory) {
   }
 }
 await collect(client);
-if (!assets['/']) throw new Error('Missing V2 page');
+if (!assets['/']) throw new Error('Missing V3 page');
 const html = Buffer.from(assets['/'].base64, 'base64').toString('utf8');
-if (/href=["'][^"']*\.pdf/i.test(html)) throw new Error('PDF link remains in V2');
-if (!html.includes('hero-signal-system')) throw new Error('Wrong design version');
+if (/href=["'][^"']*\.pdf/i.test(html)) throw new Error('PDF link remains in V3');
+if (!html.includes('hero-v3')) throw new Error('Wrong design version');
 await rm(path.join(root, 'dist'), { recursive: true, force: true });
 await mkdir(path.join(root, 'dist/.openai'), { recursive: true });
 await writeFile(path.join(root, 'dist/.openai/hosting.json'), await readFile(path.join(root, '.openai/hosting.json')));
@@ -35,4 +35,4 @@ await build({ configFile: false, publicDir: false, build: { ssr: entry, outDir: 
 // No dist/client or other static output: every byte is served only by the authenticated Worker.
 await rm(client, { recursive: true, force: true });
 await rm(entry);
-console.log(`Protected Worker built with ${Object.keys(assets).length} V2 assets. No PDFs or old versions packaged.`);
+console.log(`Protected Worker built with ${Object.keys(assets).length} V3 assets. No PDFs or old versions packaged.`);

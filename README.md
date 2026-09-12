@@ -5,10 +5,11 @@ A responsive, research-first project page for **ROOM: A Human–Humanoid Interac
 
 ## Design versions
 
-- **Version 2 (current):** silver-blue hero, a nonverbal-to-action diagram, alternating light research panels and deep-blue technical sections.
+- **Version 3 (current):** photographic opening, centered paper identity, white and sage surfaces, deep-teal accents, serif headlines and an interactive task gallery. Inspired by the reading rhythm of Behavior Robot Suite, with original ROOM composition and assets.
+- **Version 2 (preserved):** silver-blue hero, a nonverbal-to-action diagram, alternating light research panels and deep-blue technical sections. Its protected Worker snapshot is in `archive/versions/v2/`; source is tagged `v2`.
 - **Version 1 (preserved):** the original charcoal/orange design, kept offline. The complete static snapshot is in `archive/versions/v1/`; its source is tagged `v1` in Git.
 
-The snapshot is immutable. Do not replace its files when changing the current website. Both versions retain their own styles, scripts and assets so they can be reviewed independently. See `VERSIONS.md` for the source reference.
+The snapshot is immutable. Do not replace its files when changing the current website. The archived versions retain their own styles, scripts and assets so they can be reviewed independently. See `VERSIONS.md` for the source reference.
 
 ## Install and run
 
@@ -26,7 +27,7 @@ npm run build
 npm run preview
 ```
 
-`dist/server/index.js` is the complete Cloudflare-compatible Worker. The page is prerendered and bundled together with its allowed images, scripts and fonts inside the Worker; there is no separately served static directory. Every V2 resource is authenticated before it is returned. PDFs, old versions and local source files are excluded from the deployment.
+`dist/server/index.js` is the complete Cloudflare-compatible Worker. The page is prerendered and bundled together with its allowed images, scripts and fonts inside the Worker; there is no separately served static directory. Every current-design resource is authenticated before it is returned. PDFs, old versions and local source files are excluded from the deployment.
 
 ## Password access
 
@@ -36,7 +37,7 @@ Configure `ROOM_PASSWORD_VERIFIER` and `ROOM_SESSION_SECRET` as **secret** runti
 
 The generated shared password has 192 bits of random entropy. A bounded per-isolate throttle also limits attempts; it is not a persistent global rate limiter. Anyone who receives the password can share it with others.
 
-Run `npm run build` followed by `npm test` to verify the protected bundle, asset gating, cookie tampering and expiry, password rotation, CSRF checks, and PDF/V1 exclusion.
+Run `npm run build` followed by `npm test` to verify the protected bundle, asset gating, cookie tampering and expiry, password rotation, CSRF checks, and PDF/archived-version exclusion.
 
 ## Content and project links
 
@@ -80,10 +81,10 @@ public/
   fonts/        WOFF2 fonts and licenses
   videos/       Optional experiment footage
 server/         Server-side password verification, sessions and protected responses
-archive/        Offline V1 snapshot and manuscript; never packaged
+archive/        Offline V1/V2 snapshots and manuscript; never packaged
 tests/          Access-control and deployment-boundary checks
 scripts/
-  build-protected.mjs  Bundle allowed V2 assets inside the Worker
+  build-protected.mjs  Bundle allowed current-design assets inside the Worker
   preview.mjs   Run the same Worker locally
   extract_assets.py  Reproducible PDF extraction and crop coordinates
 ```

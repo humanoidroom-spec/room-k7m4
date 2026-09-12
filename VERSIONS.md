@@ -3,7 +3,8 @@
 | Design | Location | Preservation |
 | --- | --- | --- |
 | Version 1 | `archive/versions/v1/` (offline) | Independent copy of the first validated static build |
-| Version 2 | `/` (password required) | Current silver-blue design |
+| Version 2 | `archive/versions/v2/` (offline) | Protected Worker snapshot; source tagged `v2` |
+| Version 3 | `/` (password required) | Current photographic, serif and teal design |
 
 ## Version 1 source
 
@@ -17,4 +18,16 @@ The snapshot was made before any version 2 source or styling edits. Its static a
 
 To inspect the old source without changing the current working directory, use `git show v1:path/to/file`. To continue work from version 1, create a separate Git worktree from `v1`.
 
-The shared V2 uses server-side password protection and omits the manuscript download. All paper-sourced quantitative data remain unchanged. V1 and every PDF path return 404 even after password authentication.
+The shared current design uses server-side password protection and omits the manuscript download. All paper-sourced quantitative data remain unchanged. All archived versions and every PDF path return 404 even after password authentication.
+
+## Version 2 source
+
+- Git tag: `v2`
+- Full source commit: `bbd1b037c3c4113a1e156241a41641fec516a5c9`
+- Snapshot: `archive/versions/v2/room-v2-worker.tar.gz`
+
+The snapshot contains the complete protected Worker and hosting manifest from the validated V2 build. Runtime secrets are external and are not included. It was saved before V3 implementation and is never packaged into the shared website.
+
+## Version 3
+
+V3 uses a cinematic paper-image opening, a centered research introduction and a four-task gallery. The scientific data, server-side password, asset protection and manuscript exclusion are retained. The existing shared password is unchanged.
