@@ -1,5 +1,15 @@
 # ROOM — design and research notes
 
+## Version 2 — current design
+
+Version 1 is retained as the Git tag `v1` and an independent static snapshot under `public/versions/v1/`. Research claims, all numerical results, source images and the original caveats remain unchanged.
+
+The new visual thesis is a robotics research instrument under cool studio light: silver and ice-blue surfaces, ink-blue typography, a restrained cobalt accent, and deep-blue technical sections. The hero now combines the research question with a small, explicitly conceptual diagram of gaze / gesture / body behavior feeding ROOM and informing robot action. A faint coordinate grid gives the hero and method section spatial structure. It is a visual explanation, not a simulated recording or a measured trajectory.
+
+Dataset and benchmark sections use brighter surfaces to separate quantitative evidence from technical explanation. Collection photography sits on a cool gray background. The method and failure analysis sections use layered navy surfaces rather than pure black. The human study uses a richer blue field with clearly differentiated verbal and nonverbal values. Framed images, subtle inner highlights, small corner radii and consistent blue focus/selection states connect the page. Supporting text has a 12px minimum; ordinary body text keeps its larger sizes.
+
+The new design uses only existing assets and CSS/HTML geometry. It adds no image-generation, animation or UI package dependencies, and preserves the existing reduced-motion behavior. Source styles are formatted for subsequent editing.
+
 ## Core narrative
 
 The research question is “Can humanoids read the room?” The distinction is between executing a manipulation trajectory and interpreting the human behavior that makes a particular target, response, or action time appropriate. ROOM records both sides of the interaction: human gaze, gestures, body motion and egocentric video, aligned with humanoid observations and actions.
@@ -16,7 +26,7 @@ Five supported headlines:
 
 ROOM's distinguishing contribution is systematic nonverbal grounding in paired human–humanoid manipulation data, spanning referential and interaction-state requirements, tabletop manipulation and loco-manipulation. This is broader than measuring whether a robot is physically capable of completing a motion. Avoid calling it the first or largest dataset without a defensible comparative claim.
 
-## Visual direction
+## Visual direction — version 1
 
 A dark editorial research journal: charcoal (#080a09), warm white, restrained orange drawn from the ROOM title in Fig. 1. Desaturated green functions as a neutral supporting tone, including the light human-study section. DM Sans supplies large, tightly spaced but non-overlapping headings; IBM Plex Mono marks provenance, signal identities and experimental metadata. No illustration, invented robot scene, decorative particle system, or color inversion is used.
 

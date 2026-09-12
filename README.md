@@ -2,6 +2,14 @@
 
 A responsive, research-first project page for **ROOM: A Human–Humanoid Interaction Manipulation Dataset for Nonverbal Behavior Grounding**. Built with Vite, React and TypeScript. All research claims and experimental figures are sourced from the supplied anonymous manuscript.
 
+
+## Design versions
+
+- **Version 2 (current):** silver-blue hero, a nonverbal-to-action diagram, alternating light research panels and deep-blue technical sections.
+- **Version 1 (preserved):** the original charcoal/orange design, available at `versions/v1/` relative to the site root. The complete static snapshot is in `public/versions/v1/`; its source is tagged `v1` in Git.
+
+The snapshot is immutable. Do not replace its files when changing the current website. Both versions retain their own styles, scripts and assets so they can be reviewed independently. See `VERSIONS.md` for the source reference.
+
 ## Install and run
 
 Requires Node.js 22 LTS (or a compatible current LTS) and npm.
