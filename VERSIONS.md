@@ -4,7 +4,7 @@
 | --- | --- | --- |
 | Version 1 | `archive/versions/v1/` (offline) | Independent copy of the first validated static build |
 | Version 2 | `archive/versions/v2/` (offline) | Protected Worker snapshot; source tagged `v2` |
-| Version 3 | `/` (password required) | Current photographic, serif and teal design |
+| Version 3 | `/` (password required) | Current warm household design |
 
 ## Version 1 source
 
@@ -30,4 +30,4 @@ The snapshot contains the complete protected Worker and hosting manifest from th
 
 ## Version 3
 
-V3 uses a cinematic paper-image opening, a centered research introduction and a four-task gallery. The scientific data, server-side password, asset protection and manuscript exclusion are retained. The existing shared password is unchanged.
+V3 uses an inviting ROOM identity, a bright household photograph, cream and wood tones, a centered research introduction and a four-task gallery. The initial teal V3 remains in Git history at `88b8e8ffb964ef91471fea64dd843307430d73c0`. The scientific data, server-side password, asset protection and manuscript exclusion are retained. The existing shared password is unchanged.

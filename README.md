@@ -5,7 +5,7 @@ A responsive, research-first project page for **ROOM: A Human–Humanoid Interac
 
 ## Design versions
 
-- **Version 3 (current):** photographic opening, centered paper identity, white and sage surfaces, deep-teal accents, serif headlines and an interactive task gallery. Inspired by the reading rhythm of Behavior Robot Suite, with original ROOM composition and assets.
+- **Version 3 (current):** a warm home-centered design: large ROOM identity, a bright room-wide experiment photograph, cream surfaces, walnut type, terracotta accents and an interactive task gallery. Inspired by the research reading rhythm of Behavior Robot Suite; visual composition and assets are ROOM’s own.
 - **Version 2 (preserved):** silver-blue hero, a nonverbal-to-action diagram, alternating light research panels and deep-blue technical sections. Its protected Worker snapshot is in `archive/versions/v2/`; source is tagged `v2`.
 - **Version 1 (preserved):** the original charcoal/orange design, kept offline. The complete static snapshot is in `archive/versions/v1/`; its source is tagged `v1` in Git.
 

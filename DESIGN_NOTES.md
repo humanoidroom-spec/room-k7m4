@@ -1,6 +1,12 @@
 # ROOM — design and research notes
 
-## Version 3 — current design
+## Version 3 — warm household direction (current)
+
+The user clarified that ROOM should evoke a family home, with warm colors and a strong sense of the room itself. The revised first screen therefore makes ROOM the typographic anchor and places a wide, bright household experiment photograph below it. Walnut-brown type, cream surfaces, terracotta actions, softer picture corners and generous spacing connect the page to domestic materials and daylight. The mobile crop prioritizes the person and robot beside the sofa. The research introduction, interactive task gallery, charts and password gate use the same palette; failure categories retain distinct clay, olive and neutral colors.
+
+All displayed scenes remain original manuscript images. There are no invented family photos or changed experimental results. Household language makes the interaction examples more approachable while the formal title, source notes and quantitative data remain intact. The server password and exclusion of PDFs and archived designs are unchanged.
+
+## Version 3 — initial visual direction (preserved in Git)
 
 Visual reference: https://behavior-robot-suite.github.io/. V3 adopts the reference’s reading rhythm: a large experiment-led opening, centered academic project information, an image-led interaction gallery, and clearly separated research questions. No reference-site source code, template, imagery, results, institutional marks or author identities were copied.
 

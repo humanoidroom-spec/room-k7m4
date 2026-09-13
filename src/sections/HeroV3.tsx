@@ -3,15 +3,16 @@ import { useState } from 'react';
 import { Arrow, ResearchMedia, SectionLabel } from '../components/Primitives';
 
 export default function HeroV3() {
-  return <section className="hero-v3" id="overview" data-design-version="3">
-    <div className="hero-film">
-      <ResearchMedia name={project.media.hero} poster={project.media.heroPoster} alt="A human and Unitree G1 collaborate in ROOM's real household experiments." eager />
-      <div className="film-shade" />
-      <div className="film-topline"><span>HUMAN ↔ HUMANOID</span><span>A SHARED SPACE. A SHARED TASK.</span></div>
-      <div className="film-title"><p>ROOM / NONVERBAL BEHAVIOR GROUNDING</p><h1>Can humanoids<br />read <em>the room?</em></h1><a href="#research">Explore the research <span>↓</span></a></div>
-      <div className="film-caption"><span>OBSERVING THE HUMAN.<br />UNDERSTANDING THE MOMENT.</span><span>REAL EXPERIMENT SCENES · FIG. 01</span></div>
+  return <section className="hero-v3 home-hero" id="overview" data-design-version="3" data-theme="home">
+    <div className="home-heading">
+      <div className="home-identity"><p className="eyebrow">HUMAN–HUMANOID INTERACTION</p><h1>ROOM<span>.</span></h1><p>Learning to understand everyday life.</p></div>
+      <div className="home-invitation"><p>A shared space.<br /><em>A little understanding.</em></p><a href="#research">Explore ROOM <span>↓</span></a></div>
     </div>
-    <div className="hero-signal-strip"><span>Gaze</span><i /> <span>Gesture</span><i /><span>Body motion</span><Arrow /><strong>Grounded robot action</strong></div>
+    <figure className="home-scene">
+      <ResearchMedia name={project.media.hero} poster={project.media.heroPoster} alt="People and Unitree G1 robots share everyday tasks around a table, chair and bed in ROOM's household experimental setting." eager />
+      <figcaption><span>At home, interaction is everywhere.</span><small>ROOM HOUSEHOLD EXPERIMENTS · FIG. 01</small></figcaption>
+    </figure>
+    <div className="hero-signal-strip"><span>A glance</span><i /><span>A gesture</span><i /><span>A shift in posture</span><Arrow /><strong>A helpful response</strong></div>
   </section>;
 }
 
@@ -30,8 +31,8 @@ export function InteractionGallery() {
   const task = taskGroups[selected];
   const select = (step: number) => setSelected(current => (current + step + taskGroups.length) % taskGroups.length);
   return <section className="section interaction-gallery" id="tasks"><div className="wrap">
-    <SectionLabel number="01">Interactions in the wild</SectionLabel>
-    <div className="section-heading"><h2>A signal from you.<br /><em>A response from the robot.</em></h2><p>Four evaluation task groups.<br />A closer look at what collaboration requires.</p></div>
+    <SectionLabel number="01">Everyday moments, shared</SectionLabel>
+    <div className="section-heading"><h2>A signal from you.<br /><em>A response from the robot.</em></h2><p>At the table, beside a chair, or moving together.<br />Four evaluation task groups in a shared room.</p></div>
     <div className="gallery-tabs" aria-label="Interaction task gallery">{taskGroups.map((item, i) => <button key={item.id} type="button" className={selected === i ? 'selected' : ''} aria-pressed={selected === i} onClick={() => setSelected(i)}><span>0{i + 1}</span>{item.name}</button>)}</div>
     <div className="gallery-stage">
       <div className="gallery-picture"><ResearchMedia key={task.id} name={task.video} poster={`assets/${task.image}.webp`} alt={`${task.name}: an experimental scene from the ROOM manuscript`} /><span className="gallery-frame-label">EXPERIMENTAL FRAME / {String(selected + 1).padStart(2, '0')}</span></div>
