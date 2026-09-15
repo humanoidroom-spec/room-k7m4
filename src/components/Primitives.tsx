@@ -49,6 +49,6 @@ export function ResearchMedia({ name, poster, alt, className = '', eager = false
       video.removeEventListener('ended', restart);
     };
   }, [available, failed, startAt]);
-  if (available && !failed) return <video ref={videoRef} className={className} src={asset(available.replace('/public/', ''))} poster={asset(poster)} autoPlay={autoplay} muted loop={startAt <= 0} data-loop-start={startAt} playsInline controls={controls} aria-label={alt} preload={eager ? 'auto' : 'metadata'} onError={() => setFailed(true)} />;
+  if (available && !failed) return <video ref={videoRef} className={className} src={asset(available)} poster={asset(poster)} autoPlay={autoplay} muted loop={startAt <= 0} data-loop-start={startAt} playsInline controls={controls} aria-label={alt} preload={eager ? 'auto' : 'metadata'} onError={() => setFailed(true)} />;
   return <img className={className} src={asset(poster)} alt={alt} loading={eager ? 'eager' : 'lazy'} fetchPriority={eager ? 'high' : 'auto'} decoding="async" />;
 }

@@ -39,7 +39,7 @@ test('write methods and excluded files remain unavailable', async () => {
 
 test('production bundle contains the public V3 page and only approved assets', async () => {
   const dirs = await readdir(new URL('../dist/', import.meta.url));
-  assert.deepEqual(dirs.sort(), ['.openai', 'server']);
+  assert.deepEqual(dirs.filter(name => name !== '.openai').sort(), ['server']);
   const response = await builtWorker.fetch(request());
   assert.equal(response.status, 200);
   const html = await response.text();

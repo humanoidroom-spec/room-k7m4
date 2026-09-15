@@ -27,8 +27,13 @@ const html = Buffer.from(assets['/'].base64, 'base64').toString('utf8');
 if (/href=["'][^"']*\.pdf/i.test(html)) throw new Error('PDF link remains in V3');
 if (!html.includes('hero-v3')) throw new Error('Wrong design version');
 await rm(path.join(root, 'dist'), { recursive: true, force: true });
-await mkdir(path.join(root, 'dist/.openai'), { recursive: true });
-await writeFile(path.join(root, 'dist/.openai/hosting.json'), await readFile(path.join(root, '.openai/hosting.json')));
+try {
+  const hosting = await readFile(path.join(root, '.openai/hosting.json'));
+  await mkdir(path.join(root, 'dist/.openai'), { recursive: true });
+  await writeFile(path.join(root, 'dist/.openai/hosting.json'), hosting);
+} catch (error) {
+  if (error.code !== 'ENOENT') throw error;
+}
 const entry = path.join(root, 'tmp/public-entry.mjs');
 await writeFile(entry, `import { createWorker } from '../server/worker.mjs';\nexport default createWorker(${JSON.stringify(assets)});\n`);
 await build({ configFile: false, publicDir: false, build: { ssr: entry, outDir: path.join(root, 'dist/server'), emptyOutDir: true, minify: true, sourcemap: false, rollupOptions: { output: { entryFileNames: 'index.js', inlineDynamicImports: true } } } });

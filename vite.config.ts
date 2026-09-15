@@ -5,7 +5,7 @@ import { readdirSync } from 'node:fs';
 // A filename inventory avoids emitting a duplicate hashed copy of public videos.
 const videos = readdirSync(new URL('./public/videos/', import.meta.url))
   .filter(name => /\.(mp4|webm)$/.test(name))
-  .map(name => `/public/videos/${name}`);
+  .map(name => `videos/${name}`);
 
 export default defineConfig({
   plugins: [react()],
