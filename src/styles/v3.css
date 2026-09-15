@@ -120,3 +120,20 @@
   .home-invitation { display: block; }
   .home-invitation > a { margin-top: 15px; }
 }
+
+
+/* Preserve all four views of the demo and keep captions clear of video controls. */
+.home-scene--video { aspect-ratio: auto; }
+.home-scene--video > video, .home-scene--video > img {
+  width: 100%; height: auto; aspect-ratio: 16 / 9;
+  object-fit: contain; object-position: center; background: #29241e;
+}
+.home-scene--video figcaption {
+  position: static; padding: 18px 24px; background: #f1e7d8;
+  color: #674934; align-items: center;
+}
+@media (max-width: 620px) {
+  .home-scene--video figcaption { padding: 16px 18px; }
+  .home-scene--video figcaption > span { font-size: 21px; max-width: none; }
+  .home-scene--video figcaption > small { max-width: none; }
+}

@@ -53,6 +53,8 @@ The manuscript is not shared in this preview: `project.links.paper` is null, and
 
 ## Assets and videos
 
+The homepage now plays the supplied 15-second, 1280 × 720 H.264 video at `public/videos/hero.mp4`. It is muted, loops automatically while visible, and keeps native pause/fullscreen controls. All four views are displayed at 16:9 on desktop and mobile. Its poster is the first frame of that same video. Video requests, including byte ranges for playback and seeking, remain password protected. The original uploaded file remains untouched in the workspace.
+
 - `public/assets/`: optimized WebP crops extracted from the PDF; no generated or unrelated robotics imagery.
 - `public/fonts/`: self-hosted DM Sans and IBM Plex Mono plus their OFL licenses.
 - `archive/room-paper.pdf`: an unmodified offline copy of the supplied manuscript; never deployed.

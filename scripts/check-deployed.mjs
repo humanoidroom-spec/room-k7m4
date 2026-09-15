@@ -64,6 +64,17 @@ assert.equal((await fetchWithCurl(assetPath)).status, 401);
 assert.equal((await fetchWithCurl(assetPath, { headers: authHeaders })).status, 200);
 console.log('PASS scripts require a valid authenticated session');
 
+const videoPath = new URL(page.body.match(/<video[^>]*src="([^"]+)"/)[1], origin + '/').pathname;
+assert.equal((await fetchWithCurl(videoPath, { headers: { Range: 'bytes=0-31' } })).status, 401);
+const video = await fetchWithCurl(videoPath, { headers: { ...authHeaders, Range: 'bytes=0-31' } });
+assert.equal(video.status, 206);
+assert.match(video.headers.get('Content-Type'), /^video\/mp4/);
+assert.match(video.headers.get('Content-Range'), /^bytes 0-31\/\d+$/);
+assert.equal(video.headers.get('Content-Length'), '32');
+assert.match(video.headers.get('Cache-Control'), /no-store/);
+console.log('PASS homepage video supports authenticated byte-range playback');
+
+
 for (const path of ['/room-paper.pdf', '/versions/v1/', '/versions/v1/room-paper.pdf', '/archive/room-paper.pdf', '/server/index.js']) {
   assert.equal((await fetchWithCurl(path)).status, 404, path);
   assert.equal((await fetchWithCurl(path, { headers: authHeaders })).status, 404, path);

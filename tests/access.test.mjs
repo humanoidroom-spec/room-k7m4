@@ -10,6 +10,7 @@ const password = toBase64Url(crypto.getRandomValues(new Uint8Array(24)));
 const assets = {
   '/': { type: 'text/html', base64: btoa('<h1>Protected research</h1>') },
   '/assets/test.js': { type: 'text/javascript', base64: btoa('console.log("private")') },
+  '/videos/test.mp4': { type: 'video/mp4', base64: btoa('0123456789') },
 };
 let env;
 before(async () => {
@@ -138,4 +139,41 @@ test('production bundle contains only protected V3; all referenced page assets p
   const source = await readFile(new URL('../dist/server/index.js', import.meta.url), 'utf8');
   assert.ok(!source.includes(password));
   assert.ok(!source.includes(env.ROOM_PASSWORD_VERIFIER));
+});
+
+
+test('video ranges support browser playback, seeking and HEAD without bypassing the password', async () => {
+  const worker = createWorker(assets);
+  const auth = { Cookie: cookie(await login(worker)) };
+  for (const method of ['GET', 'HEAD']) {
+    const blocked = await worker.fetch(request('/videos/test.mp4', { method, headers: { Range: 'bytes=0-1' } }), env);
+    assert.equal(blocked.status, 401);
+    assert.equal(blocked.headers.get('Content-Range'), null);
+  }
+  for (const [range, expected, contentRange] of [
+    ['bytes=0-1', '01', 'bytes 0-1/10'],
+    ['bytes=7-', '789', 'bytes 7-9/10'],
+    ['bytes=-3', '789', 'bytes 7-9/10'],
+    ['bytes=8-99', '89', 'bytes 8-9/10'],
+  ]) {
+    const result = await worker.fetch(request('/videos/test.mp4', { headers: { ...auth, Range: range } }), env);
+    assert.equal(result.status, 206);
+    assert.equal(result.headers.get('Content-Range'), contentRange);
+    assert.equal(result.headers.get('Content-Length'), String(expected.length));
+    assert.equal(result.headers.get('Accept-Ranges'), 'bytes');
+    assert.match(result.headers.get('Cache-Control'), /no-store/);
+    assert.equal(await result.text(), expected);
+  }
+  for (const range of ['bytes=10-', 'bytes=7-3', 'bytes=-0']) {
+    const result = await worker.fetch(request('/videos/test.mp4', { headers: { ...auth, Range: range } }), env);
+    assert.equal(result.status, 416);
+    assert.equal(result.headers.get('Content-Range'), 'bytes */10');
+  }
+  const head = await worker.fetch(request('/videos/test.mp4', { method: 'HEAD', headers: auth }), env);
+  assert.equal(head.status, 200);
+  assert.equal(head.headers.get('Content-Length'), '10');
+  assert.equal(await head.text(), '');
+  const ignored = await worker.fetch(request('/videos/test.mp4', { headers: { ...auth, Range: 'bytes=0-1', 'If-Range': 'unknown-validator' } }), env);
+  assert.equal(ignored.status, 200);
+  assert.equal(await ignored.text(), '0123456789');
 });

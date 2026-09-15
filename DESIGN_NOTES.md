@@ -1,5 +1,9 @@
 # ROOM — design and research notes
 
+## Homepage video
+
+The user-supplied `bbd4f2f35943056e3b92ef3b766e70f3.mp4` replaces the opening photograph. The 15-second 720p video is copied without transcoding to `public/videos/hero.mp4`; its first frame provides the poster. The full four-view 16:9 composition is retained on all screen sizes. Captions move below the media so they cannot cover playback controls or demonstration content. Playback is muted and loops when in view; reduced-motion users retain manual controls. No other research figures or numerical content change. The protected Worker supports authenticated single byte ranges for browser loading, seeking and replay.
+
 ## Version 3 — warm household direction (current)
 
 The user clarified that ROOM should evoke a family home, with warm colors and a strong sense of the room itself. The revised first screen therefore makes ROOM the typographic anchor and places a wide, bright household experiment photograph below it. Walnut-brown type, cream surfaces, terracotta actions, softer picture corners and generous spacing connect the page to domestic materials and daylight. The mobile crop prioritizes the person and robot beside the sofa. The research introduction, interactive task gallery, charts and password gate use the same palette; failure categories retain distinct clay, olive and neutral colors.

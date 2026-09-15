@@ -8,9 +8,9 @@ export default function HeroV3() {
       <div className="home-identity"><p className="eyebrow">HUMAN–HUMANOID INTERACTION</p><h1>ROOM<span>.</span></h1><p>Learning to understand everyday life.</p></div>
       <div className="home-invitation"><p>A shared space.<br /><em>A little understanding.</em></p><a href="#research">Explore ROOM <span>↓</span></a></div>
     </div>
-    <figure className="home-scene">
-      <ResearchMedia name={project.media.hero} poster={project.media.heroPoster} alt="People and Unitree G1 robots share everyday tasks around a table, chair and bed in ROOM's household experimental setting." eager />
-      <figcaption><span>At home, interaction is everywhere.</span><small>ROOM HOUSEHOLD EXPERIMENTS · FIG. 01</small></figcaption>
+    <figure className="home-scene home-scene--video">
+      <ResearchMedia name={project.media.hero} poster="assets/hero-video-poster.webp" alt="Four ROOM household demonstrations showing people and a humanoid coordinating through gestures and everyday actions." eager />
+      <figcaption><span>At home, interaction is everywhere.</span><small>ROOM HOUSEHOLD DEMONSTRATIONS</small></figcaption>
     </figure>
     <div className="hero-signal-strip"><span>A glance</span><i /><span>A gesture</span><i /><span>A shift in posture</span><Arrow /><strong>A helpful response</strong></div>
   </section>;

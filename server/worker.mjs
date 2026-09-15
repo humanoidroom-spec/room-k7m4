@@ -74,7 +74,7 @@ export function createWorker(assets) {
     async fetch(request, env) {
       const url = new URL(request.url);
       const path = pathFor(url);
-      // Only known V2 paths are ever served. PDF files and old versions remain absent even after login.
+      // Only known current-design paths are ever served. PDF files and old versions remain absent even after login.
       if (path === null || /(^|\/)versions(\/|$)|\.pdf(?:\/|$)/i.test(path)) return response('Not found.', 404);
       if (path === '/robots.txt') return response('User-agent: *\nDisallow: /\n');
       if (!configured(env)) return gate('', 503, true);
@@ -104,8 +104,24 @@ export function createWorker(assets) {
         return response('Password required.', 401);
       }
       const file = assets[path];
-      const bytes = request.method === 'HEAD' ? null : Uint8Array.from(atob(file.base64), char => char.charCodeAt(0));
-      return response(bytes, 200, { 'Content-Type': file.type });
+      const size = file.base64.length / 4 * 3 - (file.base64.endsWith('==') ? 2 : file.base64.endsWith('=') ? 1 : 0);
+      const media = file.type.startsWith('video/');
+      const headers = { 'Content-Type': file.type, 'Content-Length': String(size), ...(media ? { 'Accept-Ranges': 'bytes' } : {}) };
+      if (request.method === 'HEAD') return response(null, 200, headers);
+      // Video players use byte ranges for loading, seeking and replay. Authentication above
+      // applies to every range request, including requests for media metadata.
+      const range = media && !request.headers.has('If-Range') ? request.headers.get('Range')?.match(/^bytes=(\d*)-(\d*)$/) : null;
+      if (range && (range[1] || range[2])) {
+        const first = range[1] ? Number(range[1]) : Math.max(0, size - Number(range[2]));
+        const last = range[1] && range[2] ? Math.min(Number(range[2]), size - 1) : size - 1;
+        if (!Number.isSafeInteger(first) || !Number.isSafeInteger(last) || first >= size || last < first) {
+          return response(null, 416, { ...headers, 'Content-Length': '0', 'Content-Range': `bytes */${size}` });
+        }
+        const bytes = Uint8Array.from(atob(file.base64), char => char.charCodeAt(0));
+        return response(bytes.slice(first, last + 1), 206, { ...headers, 'Content-Length': String(last - first + 1), 'Content-Range': `bytes ${first}-${last}/${size}` });
+      }
+      const bytes = Uint8Array.from(atob(file.base64), char => char.charCodeAt(0));
+      return response(bytes, 200, headers);
     },
   };
 }
