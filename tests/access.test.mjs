@@ -1,179 +1,96 @@
-import { test, before } from 'node:test';
+import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFile, readdir } from 'node:fs/promises';
-import { createPasswordVerifier, issueSession, COOKIE_NAME, SESSION_SECONDS, toBase64Url } from '../server/auth.mjs';
 import { createWorker } from '../server/worker.mjs';
 import builtWorker from '../dist/server/index.js';
 
 const origin = 'https://preview.example';
-const password = toBase64Url(crypto.getRandomValues(new Uint8Array(24)));
 const assets = {
-  '/': { type: 'text/html', base64: btoa('<h1>Protected research</h1>') },
-  '/assets/test.js': { type: 'text/javascript', base64: btoa('console.log("private")') },
+  '/': { type: 'text/html', base64: btoa('<h1>Public research</h1>') },
+  '/assets/test.js': { type: 'text/javascript', base64: btoa('console.log("public")') },
   '/videos/test.mp4': { type: 'video/mp4', base64: btoa('0123456789') },
 };
-let env;
-before(async () => {
-  env = { ROOM_PASSWORD_VERIFIER: await createPasswordVerifier(password), ROOM_SESSION_SECRET: toBase64Url(crypto.getRandomValues(new Uint8Array(32))) };
-});
+
 function request(path = '/', extra = {}) { return new Request(origin + path, extra); }
-function login(worker, input = password, options = {}) {
-  return worker.fetch(request('/access', { method: 'POST', headers: { Origin: origin, 'Content-Type': 'application/x-www-form-urlencoded', ...options.headers }, body: new URLSearchParams({ password: input }) }), env);
-}
-function cookie(response) { return response.headers.get('Set-Cookie').split(';')[0]; }
 
-test('anonymous visitors receive only the gate; assets and HEAD requests require authentication', async () => {
+test('anonymous visitors can open the page and every published asset', async () => {
   const worker = createWorker(assets);
-  const page = await worker.fetch(request(), env);
-  const html = await page.text();
+  const page = await worker.fetch(request());
   assert.equal(page.status, 200);
-  assert.match(html, /type="password"/);
-  assert.doesNotMatch(html, /Protected research/);
-  for (const method of ['GET', 'HEAD']) {
-    const response = await worker.fetch(request('/assets/test.js', { method }), env);
-    assert.equal(response.status, 401);
-    assert.match(response.headers.get('Cache-Control'), /no-store/);
-  }
+  assert.match(await page.text(), /Public research/);
+  assert.equal(page.headers.get('Set-Cookie'), null);
+  const script = await worker.fetch(request('/assets/test.js'));
+  assert.equal(script.status, 200);
+  assert.match(await script.text(), /public/);
+  const head = await worker.fetch(request('/assets/test.js', { method: 'HEAD' }));
+  assert.equal(head.status, 200);
+  assert.equal(await head.text(), '');
+  const robots = await worker.fetch(request('/robots.txt'));
+  assert.match(await robots.text(), /Allow: \//);
 });
 
-test('correct password creates a secure cookie; wrong passwords reveal no content', async () => {
+test('write methods and excluded files remain unavailable', async () => {
   const worker = createWorker(assets);
-  assert.equal((await login(worker, 'wrong-password')).status, 401);
-  const unlocked = await login(worker);
-  assert.equal(unlocked.status, 303);
-  assert.equal(unlocked.headers.get('Location'), '/');
-  for (const flag of ['HttpOnly', 'Secure', 'SameSite=Strict', 'Path=/', `Max-Age=${SESSION_SECONDS}`]) assert.ok(unlocked.headers.get('Set-Cookie').includes(flag));
-  for (const path of ['/', '/index.html', '/assets/test.js']) {
-    const result = await worker.fetch(request(path, { headers: { Cookie: cookie(unlocked) } }), env);
-    assert.equal(result.status, 200);
-    assert.equal(result.headers.get('CDN-Cache-Control'), 'no-store');
-  }
-});
-
-test('tampered, expired, wrong-origin and duplicated cookies cannot unlock content', async () => {
-  const worker = createWorker(assets);
-  const now = Math.floor(Date.now() / 1000);
-  const good = await issueSession(env, origin);
-  const candidates = [
-    `${good.slice(0, -8)}tampered`,
-    await issueSession(env, origin, now - SESSION_SECONDS - 1),
-    await issueSession(env, 'https://another.example'),
-    'fake.signature',
-  ];
-  for (const token of candidates) assert.equal((await worker.fetch(request('/assets/test.js', { headers: { Cookie: `${COOKIE_NAME}=${token}` } }), env)).status, 401);
-  assert.equal((await worker.fetch(request('/assets/test.js', { headers: { Cookie: `${COOKIE_NAME}=${good}; ${COOKIE_NAME}=${good}` } }), env)).status, 401);
-  const rotated = { ...env, ROOM_PASSWORD_VERIFIER: await createPasswordVerifier(password + 'rotated') };
-  assert.equal((await worker.fetch(request('/assets/test.js', { headers: { Cookie: `${COOKIE_NAME}=${good}` } }), rotated)).status, 401);
-});
-
-test('browser fetch submission returns JSON with the same secure cookie and nonce policy', async () => {
-  const worker = createWorker(assets);
-  const wrong = await login(worker, 'incorrect', { headers: { Accept: 'application/json' } });
-  assert.equal(wrong.status, 401);
-  const result = await login(worker, password, { headers: { Accept: 'application/json' } });
-  assert.equal(result.status, 200);
-  assert.deepEqual(await result.json(), { ok: true });
-  assert.match(result.headers.get('Set-Cookie'), /HttpOnly/);
-  const gate = await worker.fetch(request(), env);
-  const html = await gate.text();
-  const nonce = html.match(/<script nonce="([^"]+)"/)[1];
-  assert.ok(gate.headers.get('Content-Security-Policy').includes(`'nonce-${nonce}'`));
-});
-
-test('cross-site submissions, oversized bodies and bursts are rejected; logout clears the cookie', async () => {
-  const worker = createWorker(assets);
-  assert.equal((await login(worker, password, { headers: { Origin: 'https://attacker.example' } })).status, 403);
-  assert.equal((await login(worker, 'x'.repeat(3000))).status, 413);
-  for (let i = 0; i < 10; i++) await login(worker, 'wrong');
-  const blocked = await login(worker);
-  assert.equal(blocked.status, 429);
-  assert.equal(blocked.headers.get('Retry-After'), '60');
-  const locked = await worker.fetch(request('/logout', { method: 'POST', headers: { Origin: origin } }), env);
-  assert.equal(locked.status, 303);
-  assert.match(locked.headers.get('Set-Cookie'), /Max-Age=0/);
-});
-
-test('PDFs, old versions, encoded paths and source files stay unavailable after login', async () => {
-  const worker = createWorker(assets);
-  const headers = { Cookie: cookie(await login(worker)) };
+  assert.equal((await worker.fetch(request('/access', { method: 'POST' }))).status, 405);
   for (const path of ['/room-paper.pdf', '/room-paper.pdf?download=1', '/versions/v1/', '/versions/v1/room-paper.pdf', '/%76ersions/v1/', '/room-paper%2epdf', '/archive/room-paper.pdf', '/server/worker.mjs', '/assets/../room-paper.pdf', '/%252e%252e/archive/room-paper.pdf', '/.env', '/%00']) {
-    assert.equal((await worker.fetch(request(path, { headers }), env)).status, 404, path);
-    assert.equal((await worker.fetch(request(path), env)).status, 404, path);
+    assert.equal((await worker.fetch(request(path))).status, 404, path);
   }
 });
 
-test('missing secrets fail closed', async () => {
-  assert.equal((await createWorker(assets).fetch(request(), {})).status, 503);
-});
-
-test('production bundle contains only protected V3; all referenced page assets pass through the gate', async () => {
+test('production bundle contains the public V3 page and only approved assets', async () => {
   const dirs = await readdir(new URL('../dist/', import.meta.url));
   assert.deepEqual(dirs.sort(), ['.openai', 'server']);
-  const unlocked = await login(builtWorker);
-  assert.equal(unlocked.status, 303);
-  const headers = { Cookie: cookie(unlocked) };
-  const page = await builtWorker.fetch(request(), env);
-  assert.doesNotMatch(await page.text(), /hero-v3|Human gaze\. Human gesture/);
-  const html = await (await builtWorker.fetch(request('/', { headers }), env)).text();
+  const response = await builtWorker.fetch(request());
+  assert.equal(response.status, 200);
+  const html = await response.text();
   assert.match(html, /hero-v3/);
-  assert.doesNotMatch(html, /href=["'][^"']*\.pdf/i);
+  assert.doesNotMatch(html, /type=["']password|Lock preview|href=["'][^"']*\.pdf/i);
   const urls = new Set([...html.matchAll(/(?:src|href)="([^"#]+)"/g)].map(match => match[1]).filter(value => !/^https?:/.test(value)));
   for (const value of urls) {
     const path = new URL(value, origin + '/').pathname;
-    const authed = await builtWorker.fetch(request(path, { headers }), env);
-    assert.equal(authed.status, 200, path);
-    if (path !== '/') assert.equal((await builtWorker.fetch(request(path), env)).status, 401, path);
+    const asset = await builtWorker.fetch(request(path));
+    assert.equal(asset.status, 200, path);
     if (path.endsWith('.css')) {
-      const css = await authed.text();
+      const css = await asset.text();
       for (const match of css.matchAll(/url\(["']?([^\)"']+)/g)) {
         if (match[1].startsWith('data:')) continue;
         const fontPath = new URL(match[1], origin + path).pathname;
-        assert.equal((await builtWorker.fetch(request(fontPath, { headers }), env)).status, 200, fontPath);
-        assert.equal((await builtWorker.fetch(request(fontPath), env)).status, 401, fontPath);
+        assert.equal((await builtWorker.fetch(request(fontPath))).status, 200, fontPath);
       }
     }
   }
   for (const path of ['/room-paper.pdf', '/versions/v1/', '/versions/v1/room-paper.pdf', '/server/index.js', '/assets/index-CrrmOYKR.js']) {
-    assert.equal((await builtWorker.fetch(request(path, { headers }), env)).status, 404, path);
+    assert.equal((await builtWorker.fetch(request(path))).status, 404, path);
   }
   const source = await readFile(new URL('../dist/server/index.js', import.meta.url), 'utf8');
-  assert.ok(!source.includes(password));
-  assert.ok(!source.includes(env.ROOM_PASSWORD_VERIFIER));
+  assert.doesNotMatch(source, /ROOM_PASSWORD_VERIFIER|ROOM_SESSION_SECRET|Password required|Lock preview/);
 });
 
-
-test('video ranges support browser playback, seeking and HEAD without bypassing the password', async () => {
+test('video ranges support public playback, seeking and HEAD', async () => {
   const worker = createWorker(assets);
-  const auth = { Cookie: cookie(await login(worker)) };
-  for (const method of ['GET', 'HEAD']) {
-    const blocked = await worker.fetch(request('/videos/test.mp4', { method, headers: { Range: 'bytes=0-1' } }), env);
-    assert.equal(blocked.status, 401);
-    assert.equal(blocked.headers.get('Content-Range'), null);
-  }
   for (const [range, expected, contentRange] of [
     ['bytes=0-1', '01', 'bytes 0-1/10'],
     ['bytes=7-', '789', 'bytes 7-9/10'],
     ['bytes=-3', '789', 'bytes 7-9/10'],
     ['bytes=8-99', '89', 'bytes 8-9/10'],
   ]) {
-    const result = await worker.fetch(request('/videos/test.mp4', { headers: { ...auth, Range: range } }), env);
+    const result = await worker.fetch(request('/videos/test.mp4', { headers: { Range: range } }));
     assert.equal(result.status, 206);
     assert.equal(result.headers.get('Content-Range'), contentRange);
     assert.equal(result.headers.get('Content-Length'), String(expected.length));
     assert.equal(result.headers.get('Accept-Ranges'), 'bytes');
-    assert.match(result.headers.get('Cache-Control'), /no-store/);
     assert.equal(await result.text(), expected);
   }
   for (const range of ['bytes=10-', 'bytes=7-3', 'bytes=-0']) {
-    const result = await worker.fetch(request('/videos/test.mp4', { headers: { ...auth, Range: range } }), env);
+    const result = await worker.fetch(request('/videos/test.mp4', { headers: { Range: range } }));
     assert.equal(result.status, 416);
     assert.equal(result.headers.get('Content-Range'), 'bytes */10');
   }
-  const head = await worker.fetch(request('/videos/test.mp4', { method: 'HEAD', headers: auth }), env);
+  const head = await worker.fetch(request('/videos/test.mp4', { method: 'HEAD' }));
   assert.equal(head.status, 200);
   assert.equal(head.headers.get('Content-Length'), '10');
   assert.equal(await head.text(), '');
-  const ignored = await worker.fetch(request('/videos/test.mp4', { headers: { ...auth, Range: 'bytes=0-1', 'If-Range': 'unknown-validator' } }), env);
+  const ignored = await worker.fetch(request('/videos/test.mp4', { headers: { Range: 'bytes=0-1', 'If-Range': 'unknown-validator' } }));
   assert.equal(ignored.status, 200);
   assert.equal(await ignored.text(), '0123456789');
 });

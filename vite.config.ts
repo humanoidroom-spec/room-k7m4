@@ -11,5 +11,5 @@ export default defineConfig({
   plugins: [react()],
   base: './',
   define: { __ROOM_VIDEO_FILES__: JSON.stringify(videos) },
-  build: { outDir: 'tmp/protected-client', emptyOutDir: true, sourcemap: false },
+  build: { outDir: 'tmp/public-client', emptyOutDir: true, sourcemap: false },
 });

@@ -6,17 +6,17 @@ The homepage begins at 5 seconds and loops from the end back to 5 seconds. Nativ
 
 ## Immersive opening
 
-The user requested video that fills the screen instead of an inset media frame. The opening is now one viewport high with edge-to-edge cover video, no gutters or rounded border, transparent navigation at the top, and warm cream ROOM typography over a subtle brown gradient. The signal strip and research page start below the video. Portrait screens use a cover crop; native fullscreen controls remain available to view the source composition. Autoplay, mute, looping, reduced-motion support and password gating are retained.
+The user requested video that fills the screen instead of an inset media frame. The opening is now one viewport high with edge-to-edge cover video, no gutters or rounded border, transparent navigation at the top, and warm cream ROOM typography over a subtle brown gradient. The signal strip and research page start below the video. Portrait screens use a cover crop; native fullscreen controls remain available to view the source composition. Autoplay, mute, looping and reduced-motion support are retained.
 
 ## Homepage video (initial framed treatment)
 
-The user-supplied `bbd4f2f35943056e3b92ef3b766e70f3.mp4` replaces the opening photograph. The 15-second 720p video is copied without transcoding to `public/videos/hero.mp4`; its first frame provides the poster. The full four-view 16:9 composition is retained on all screen sizes. Captions move below the media so they cannot cover playback controls or demonstration content. Playback is muted and loops when in view; reduced-motion users retain manual controls. No other research figures or numerical content change. The protected Worker supports authenticated single byte ranges for browser loading, seeking and replay.
+The user-supplied `bbd4f2f35943056e3b92ef3b766e70f3.mp4` replaces the opening photograph. The 15-second 720p video is copied without transcoding to `public/videos/hero.mp4`; its first frame provides the poster. The full four-view 16:9 composition is retained on all screen sizes. Captions move below the media so they cannot cover playback controls or demonstration content. Playback is muted and loops when in view; reduced-motion users retain manual controls. No other research figures or numerical content change. The public Worker supports single byte ranges for browser loading, seeking and replay.
 
 ## Version 3 — warm household direction (current)
 
-The user clarified that ROOM should evoke a family home, with warm colors and a strong sense of the room itself. The revised first screen therefore makes ROOM the typographic anchor and places a wide, bright household experiment photograph below it. Walnut-brown type, cream surfaces, terracotta actions, softer picture corners and generous spacing connect the page to domestic materials and daylight. The mobile crop prioritizes the person and robot beside the sofa. The research introduction, interactive task gallery, charts and password gate use the same palette; failure categories retain distinct clay, olive and neutral colors.
+The user clarified that ROOM should evoke a family home, with warm colors and a strong sense of the room itself. The revised first screen therefore makes ROOM the typographic anchor and places a wide, bright household experiment photograph below it. Walnut-brown type, cream surfaces, terracotta actions, softer picture corners and generous spacing connect the page to domestic materials and daylight. The mobile crop prioritizes the person and robot beside the sofa. The research introduction, interactive task gallery and charts use the same palette; failure categories retain distinct clay, olive and neutral colors.
 
-All displayed scenes remain original manuscript images. There are no invented family photos or changed experimental results. Household language makes the interaction examples more approachable while the formal title, source notes and quantitative data remain intact. The server password and exclusion of PDFs and archived designs are unchanged.
+All displayed scenes remain original manuscript images. There are no invented family photos or changed experimental results. Household language makes the interaction examples more approachable while the formal title, source notes and quantitative data remain intact. PDFs and archived designs remain excluded.
 
 ## Version 3 — initial visual direction (preserved in Git)
 
@@ -24,7 +24,7 @@ Visual reference: https://behavior-robot-suite.github.io/. V3 adopts the referen
 
 ROOM has its own composition: one framed panoramic experiment image with an editorial research question, a three-signal strip, a large ROOM wordmark, deep-teal and sage colors, serif display typography, and a split task viewer that connects human cues to robot responses. The reference’s video mosaic, maroon palette and exact layout are not reproduced. Available manuscript frames are shown honestly as images; no fabricated demo videos or decorative playback controls are added.
 
-The entire page has a new responsive style sheet, including the existing dataset explorer, representation selector, benchmark charts, failure analysis and human study. All numerical data and source caveats remain unchanged. V2 is preserved as Git tag `v2` and an offline protected Worker archive. Only V3 is deployed, with the existing server-side password, asset checks and PDF/archive exclusion. The password gate uses the new palette.
+The entire page has a new responsive style sheet, including the existing dataset explorer, representation selector, benchmark charts, failure analysis and human study. All numerical data and source caveats remain unchanged. V2 is preserved as Git tag `v2` and an offline protected Worker archive. Only V3 is deployed, with public access, explicit asset checks and PDF/archive exclusion.
 
 V3 validation: production build and eight access-control tests pass. Browser review covers the 1470 px desktop layout, 390 px mobile layout and 768 px tablet width; task selection, gallery arrows, model changes, human-signal selection and mobile navigation work. Page width stays within the viewport; original scientific data are unchanged. Secondary study labels and baseline values were darkened after visual review.
 
@@ -123,7 +123,7 @@ All uncertain content is editable in `src/data/project.ts`. No scientific conclu
 
 Vite + React + TypeScript was chosen because there was no existing website and the deliverable is static. There are no animation, charting or UI framework dependencies. Production builds prerender the full page to static HTML and hydrate it in the browser. Charts are HTML with readable numeric values; a native table retains the complete benchmark. Controls are real buttons with pressed states, visible keyboard focus, touch sizing, and live descriptions. The mobile nav supports Escape and closes on navigation. Reduced-motion preferences disable transitions/reveals and autoplay. Fonts are self-hosted WOFF2 with swap and OFL notices. Images use explicit sizing or stable media containers, modern WebP and lazy loading; the hero is prioritized.
 
-A server-password-protected Sites preview is used for review. Public paper/code/dataset release is controlled by the author; the site does not announce acceptance or invent release destinations.
+A public Sites deployment is used for review. Public paper/code/dataset release is controlled by the author; the site does not announce acceptance or invent release destinations.
 
 
 ## Password-protected V2 preview

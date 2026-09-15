@@ -20,24 +20,20 @@ npm install
 npm run dev
 ```
 
-Open the local URL printed by the preview server. It creates a temporary local-only password unless the two runtime secrets are supplied. `npm run dev:ui` is an unprotected, loopback-only UI editing server; never use it for sharing.
+Open the local URL printed by the preview server. It serves the same public read-only page as production. `npm run dev:ui` is a loopback-only UI editing server; never use it for sharing.
 
 ```bash
 npm run build
 npm run preview
 ```
 
-`dist/server/index.js` is the complete Cloudflare-compatible Worker. The page is prerendered and bundled together with its allowed images, scripts and fonts inside the Worker; there is no separately served static directory. Every current-design resource is authenticated before it is returned. PDFs, old versions and local source files are excluded from the deployment.
+`dist/server/index.js` is the complete Cloudflare-compatible Worker. The page is prerendered and bundled together with its allowed images, scripts and fonts inside the Worker; there is no separately served static directory. The current page and its required assets are public. PDFs, old versions and local source files are excluded from the deployment.
 
-## Password access
+## Public access
 
-Sites remains publicly reachable at the platform level so friends can use a shared password without a ChatGPT login. The Worker validates that password server-side, then issues an HttpOnly, Secure, SameSite=Strict cookie valid for 8 hours. The **Lock preview** button clears that browser cookie. All page and asset responses use `no-store`; no password or verifier is embedded in the frontend.
+The deployed site is intentionally public and read-only. Visitors can open the research page and its required images, scripts, fonts and videos without a password or sign-in. The Worker serves only the current-design asset inventory; it does not expose arbitrary project files.
 
-Configure `ROOM_PASSWORD_VERIFIER` and `ROOM_SESSION_SECRET` as **secret** runtime values in Sites, then deploy. The first value is a salted PBKDF2-HMAC-SHA256 verifier, the second is 32 random bytes encoded as base64url. Generate them with `server/auth.mjs` and a cryptographically secure RNG. Do not commit production secrets or passwords. Missing secrets fail closed. Rotating either value and redeploying invalidates existing sessions.
-
-The generated shared password has 192 bits of random entropy. A bounded per-isolate throttle also limits attempts; it is not a persistent global rate limiter. Anyone who receives the password can share it with others.
-
-Run `npm run build` followed by `npm test` to verify the protected bundle, asset gating, cookie tampering and expiry, password rotation, CSRF checks, and PDF/archived-version exclusion.
+Run `npm run build` followed by `npm test` to verify public page and asset access, video byte ranges, method restrictions, and PDF/archived-version exclusion.
 
 ## Content and project links
 
@@ -53,7 +49,7 @@ The manuscript is not shared in this preview: `project.links.paper` is null, and
 
 ## Assets and videos
 
-The homepage now plays the supplied 15-second, 1280 × 720 H.264 video at `public/videos/hero.mp4`. It is muted, begins at second 5, loops the 5–15 second segment while visible, and hides native playback controls as requested. The video fills the first viewport edge to edge, with ROOM and navigation overlaid. Cover sizing adapts to the screen; portrait and very wide screens crop the sides or top/bottom. The homepage has no progress bar or player buttons. Its poster is extracted at second 5 of that same video. Video requests, including byte ranges for playback and seeking, remain password protected. The original uploaded file remains untouched in the workspace.
+The homepage now plays the supplied 15-second, 1280 × 720 H.264 video at `public/videos/hero.mp4`. It is muted, begins at second 5, loops the 5–15 second segment while visible, and hides native playback controls as requested. The video fills the first viewport edge to edge, with ROOM and navigation overlaid. Cover sizing adapts to the screen; portrait and very wide screens crop the sides or top/bottom. The homepage has no progress bar or player buttons. Its poster is extracted at second 5 of that same video. Public video requests support byte ranges for playback and seeking. The original uploaded file remains untouched in the workspace.
 
 - `public/assets/`: optimized WebP crops extracted from the PDF; no generated or unrelated robotics imagery.
 - `public/fonts/`: self-hosted DM Sans and IBM Plex Mono plus their OFL licenses.
@@ -82,11 +78,11 @@ public/
   assets/       Real paper figures and clean crops
   fonts/        WOFF2 fonts and licenses
   videos/       Optional experiment footage
-server/         Server-side password verification, sessions and protected responses
+server/         Public Worker responses and explicit asset routing
 archive/        Offline V1/V2 snapshots and manuscript; never packaged
-tests/          Access-control and deployment-boundary checks
+tests/          Public-access and deployment-boundary checks
 scripts/
-  build-protected.mjs  Bundle allowed current-design assets inside the Worker
+  build-public.mjs  Bundle allowed current-design assets inside the Worker
   preview.mjs   Run the same Worker locally
   extract_assets.py  Reproducible PDF extraction and crop coordinates
 ```

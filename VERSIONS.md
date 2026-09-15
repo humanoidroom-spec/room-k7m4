@@ -4,7 +4,7 @@
 | --- | --- | --- |
 | Version 1 | `archive/versions/v1/` (offline) | Independent copy of the first validated static build |
 | Version 2 | `archive/versions/v2/` (offline) | Protected Worker snapshot; source tagged `v2` |
-| Version 3 | `/` (password required) | Current warm household design |
+| Version 3 | `/` (public) | Current warm household design |
 
 ## Version 1 source
 
@@ -18,7 +18,7 @@ The snapshot was made before any version 2 source or styling edits. Its static a
 
 To inspect the old source without changing the current working directory, use `git show v1:path/to/file`. To continue work from version 1, create a separate Git worktree from `v1`.
 
-The shared current design uses server-side password protection and omits the manuscript download. All paper-sourced quantitative data remain unchanged. All archived versions and every PDF path return 404 even after password authentication.
+The shared current design is public and omits the manuscript download. All paper-sourced quantitative data remain unchanged. All archived versions and every PDF path return 404.
 
 ## Version 2 source
 
@@ -30,4 +30,4 @@ The snapshot contains the complete protected Worker and hosting manifest from th
 
 ## Version 3
 
-V3 uses an inviting ROOM identity, a full-screen household video, cream and wood tones, a centered research introduction and a four-task gallery. The initial teal V3 remains in Git history at `88b8e8ffb964ef91471fea64dd843307430d73c0`. The scientific data, server-side password, asset protection and manuscript exclusion are retained. The existing shared password is unchanged.
+V3 uses an inviting ROOM identity, a full-screen household video, cream and wood tones, a centered research introduction and a four-task gallery. The initial teal V3 remains in Git history at `88b8e8ffb964ef91471fea64dd843307430d73c0`. The scientific data and explicit asset allowlist are retained, while the password gate has been removed. The manuscript and archived designs remain excluded.
