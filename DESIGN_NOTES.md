@@ -1,5 +1,9 @@
 # ROOM — design and research notes
 
+## Playback interval
+
+The homepage begins at 5 seconds and loops from the end back to 5 seconds. Native controls are hidden per the user’s follow-up, so no progress bar or player buttons appear. Reduced-motion visitors see the poster instead of automatic motion. The original 15-second file is unchanged; the player seeks after metadata is available and uses an ended handler for the offset loop. Other optional videos retain their native full-length looping. The homepage poster is a frame from second 5 to match the new opening.
+
 ## Immersive opening
 
 The user requested video that fills the screen instead of an inset media frame. The opening is now one viewport high with edge-to-edge cover video, no gutters or rounded border, transparent navigation at the top, and warm cream ROOM typography over a subtle brown gradient. The signal strip and research page start below the video. Portrait screens use a cover crop; native fullscreen controls remain available to view the source composition. Autoplay, mute, looping, reduced-motion support and password gating are retained.

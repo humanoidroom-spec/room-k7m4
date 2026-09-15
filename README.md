@@ -53,7 +53,7 @@ The manuscript is not shared in this preview: `project.links.paper` is null, and
 
 ## Assets and videos
 
-The homepage now plays the supplied 15-second, 1280 × 720 H.264 video at `public/videos/hero.mp4`. It is muted, loops automatically while visible, and keeps native pause/fullscreen controls. The video fills the first viewport edge to edge, with ROOM and navigation overlaid. Cover sizing adapts to the screen; portrait and very wide screens crop the sides or top/bottom. Native fullscreen playback remains available for the complete composition. Its poster is the first frame of that same video. Video requests, including byte ranges for playback and seeking, remain password protected. The original uploaded file remains untouched in the workspace.
+The homepage now plays the supplied 15-second, 1280 × 720 H.264 video at `public/videos/hero.mp4`. It is muted, begins at second 5, loops the 5–15 second segment while visible, and hides native playback controls as requested. The video fills the first viewport edge to edge, with ROOM and navigation overlaid. Cover sizing adapts to the screen; portrait and very wide screens crop the sides or top/bottom. The homepage has no progress bar or player buttons. Its poster is extracted at second 5 of that same video. Video requests, including byte ranges for playback and seeking, remain password protected. The original uploaded file remains untouched in the workspace.
 
 - `public/assets/`: optimized WebP crops extracted from the PDF; no generated or unrelated robotics imagery.
 - `public/fonts/`: self-hosted DM Sans and IBM Plex Mono plus their OFL licenses.
@@ -68,7 +68,7 @@ The homepage now plays the supplied 15-second, 1280 × 720 H.264 video at `publi
 | Collaborative Cart Delivery | `collaborative-cart-delivery.mp4` or `.webm` |
 | Action Correction | `action-correction.mp4` or `.webm` |
 
-Vite discovers these files automatically on start/build; WebM is preferred if both exist. No JSX edits are needed. Restart the dev server if adding a new filename does not trigger a refresh. Videos play muted, inline, and loop when in view; reduced-motion users get manual playback. A decoding/load error falls back to the paper image. There are no video requests when no matching files exist. Use short, compressed clips; keep native controls accessible and avoid baking text labels into clips.
+Vite discovers these files automatically on start/build; WebM is preferred if both exist. No JSX edits are needed. Restart the dev server if adding a new filename does not trigger a refresh. Videos play muted, inline, and loop when in view; reduced-motion users get a still poster on the homepage and manual playback for other media. A decoding/load error falls back to the paper image. There are no video requests when no matching files exist. Use short, compressed clips; keep native controls accessible and avoid baking text labels into clips.
 
 ## Structure
 

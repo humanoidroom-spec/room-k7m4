@@ -6,7 +6,7 @@ export default function HeroV3() {
   return <>
     <section className="hero-v3 home-hero" id="overview" data-design-version="3" data-theme="home" data-layout="immersive">
       <figure className="home-scene home-scene--video">
-        <ResearchMedia name={project.media.hero} poster="assets/hero-video-poster.webp" alt="A montage of ROOM household demonstrations showing people and a humanoid coordinating through gestures and everyday actions." eager />
+        <ResearchMedia name={project.media.hero} poster="assets/hero-video-poster.webp" alt="A montage of ROOM household demonstrations showing people and a humanoid coordinating through gestures and everyday actions." eager startAt={5} controls={false} />
       </figure>
       <div className="home-shade" aria-hidden="true" />
       <div className="home-heading">
