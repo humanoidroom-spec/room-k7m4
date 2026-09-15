@@ -31,14 +31,14 @@ npm run preview
 
 ## GitHub Pages deployment
 
-The primary public website is deployed to [GitHub Pages](https://humanoidroom-spec.github.io/room-k7m4/) from the `main` branch. The `Deploy GitHub Pages` workflow installs dependencies, creates a prerendered static build, checks the publishable output, and deploys it automatically after every push.
+The primary public website is published by GitHub Pages from `docs/` on the `main` branch. The Pages workflow rebuilds and checks that publishable output after every push.
 
 ```bash
 npm run build:pages
 npm run test:pages
 ```
 
-The static output is written to `dist/`. Relative asset paths keep the website working under the repository path `/room-k7m4/`. The offline manuscript and archived website versions remain outside the published output.
+The static output is written to `docs/`. Relative image and video paths keep the website working under both the GitHub Pages repository path and an Anonymous GitHub `/w/<id>/` path. The stylesheet, browser module and web fonts are also embedded in `index.html` so the same page retains its design and interactions inside Anonymous GitHub's opaque-origin sandbox. The offline manuscript and archived website versions remain outside the published output.
 
 ## Public access
 

@@ -27,8 +27,13 @@ test('docs contains the prerendered ROOM page and required static assets', async
   assert.match(html, /<div id="root">.+<\/div>/s);
   assert.match(html, /hero-v3/);
   assert.match(html, /ROOM/);
+  assert.match(html, /<style data-anonymous-inline="stylesheet">/);
+  assert.match(html, /<script type="module" data-anonymous-inline="module">/);
+  assert.match(html, /data:font\/woff2;base64,/);
   assert.doesNotMatch(html, /\/src\/main\.tsx|type="password"|Enter password|Incorrect password/i);
   assert.doesNotMatch(html, /\b(?:src|href)=["']\/(?!\/)/i);
+  assert.doesNotMatch(html, /<link\b[^>]*\brel=["']stylesheet["']/i);
+  assert.doesNotMatch(html, /<script\b[^>]*\bsrc=["'][^"']*assets\//i);
 
   await access(resolve(output, '.nojekyll'));
   await access(resolve(output, 'favicon.svg'));
@@ -48,6 +53,14 @@ test('every local HTML and CSS resource stays under the anonymous prefix and exi
 
   for (const reference of htmlReferences) await access(publishedPath(reference));
 
+  const inlineStyles = [...html.matchAll(/<style\b[^>]*>([\s\S]*?)<\/style>/gi)].map(([, value]) => value);
+  for (const css of inlineStyles) {
+    const references = [...css.matchAll(/url\(\s*["']?([^"')]+)["']?\s*\)/gi)]
+      .map(([, value]) => value)
+      .filter(value => !/^(?:#|https?:|data:)/i.test(value));
+    for (const reference of references) await access(publishedPath(reference));
+  }
+
   for (const cssFile of (await filesBelow(output)).filter(file => extname(file) === '.css')) {
     const css = await readFile(cssFile, 'utf8');
     const cssBase = new URL(relative(output, cssFile).replaceAll('\\', '/'), anonymousBase);
@@ -60,6 +73,10 @@ test('every local HTML and CSS resource stays under the anonymous prefix and exi
 
 test('runtime bundles and source contain no unsafe public resource literals', async () => {
   const unsafeRuntimePath = /["']\/(?:assets|public|videos)\//;
+  const html = await readFile(resolve(output, 'index.html'), 'utf8');
+  const inlineJavaScript = [...html.matchAll(/<script\b[^>]*>([\s\S]*?)<\/script>/gi)].map(([, value]) => value);
+  for (const javascript of inlineJavaScript) assert.doesNotMatch(javascript, unsafeRuntimePath, 'inline JavaScript');
+
   const builtJavaScript = (await filesBelow(output)).filter(file => extname(file) === '.js');
   for (const file of builtJavaScript) assert.doesNotMatch(await readFile(file, 'utf8'), unsafeRuntimePath, relative(root, file));
 
