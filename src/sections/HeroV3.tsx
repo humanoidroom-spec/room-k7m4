@@ -3,17 +3,19 @@ import { useState } from 'react';
 import { Arrow, ResearchMedia, SectionLabel } from '../components/Primitives';
 
 export default function HeroV3() {
-  return <section className="hero-v3 home-hero" id="overview" data-design-version="3" data-theme="home">
-    <div className="home-heading">
-      <div className="home-identity"><p className="eyebrow">HUMAN–HUMANOID INTERACTION</p><h1>ROOM<span>.</span></h1><p>Learning to understand everyday life.</p></div>
-      <div className="home-invitation"><p>A shared space.<br /><em>A little understanding.</em></p><a href="#research">Explore ROOM <span>↓</span></a></div>
-    </div>
-    <figure className="home-scene home-scene--video">
-      <ResearchMedia name={project.media.hero} poster="assets/hero-video-poster.webp" alt="Four ROOM household demonstrations showing people and a humanoid coordinating through gestures and everyday actions." eager />
-      <figcaption><span>At home, interaction is everywhere.</span><small>ROOM HOUSEHOLD DEMONSTRATIONS</small></figcaption>
-    </figure>
+  return <>
+    <section className="hero-v3 home-hero" id="overview" data-design-version="3" data-theme="home" data-layout="immersive">
+      <figure className="home-scene home-scene--video">
+        <ResearchMedia name={project.media.hero} poster="assets/hero-video-poster.webp" alt="A montage of ROOM household demonstrations showing people and a humanoid coordinating through gestures and everyday actions." eager />
+      </figure>
+      <div className="home-shade" aria-hidden="true" />
+      <div className="home-heading">
+        <div className="home-identity"><p className="eyebrow">HUMAN–HUMANOID INTERACTION</p><h1>ROOM<span>.</span></h1><p>Learning to understand everyday life.</p></div>
+        <div className="home-invitation"><p>A shared space.<br /><em>A little understanding.</em></p><a href="#research">Explore ROOM <span>↓</span></a></div>
+      </div>
+    </section>
     <div className="hero-signal-strip"><span>A glance</span><i /><span>A gesture</span><i /><span>A shift in posture</span><Arrow /><strong>A helpful response</strong></div>
-  </section>;
+  </>;
 }
 
 export function ResearchIntro() {

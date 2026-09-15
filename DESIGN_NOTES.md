@@ -1,6 +1,10 @@
 # ROOM — design and research notes
 
-## Homepage video
+## Immersive opening
+
+The user requested video that fills the screen instead of an inset media frame. The opening is now one viewport high with edge-to-edge cover video, no gutters or rounded border, transparent navigation at the top, and warm cream ROOM typography over a subtle brown gradient. The signal strip and research page start below the video. Portrait screens use a cover crop; native fullscreen controls remain available to view the source composition. Autoplay, mute, looping, reduced-motion support and password gating are retained.
+
+## Homepage video (initial framed treatment)
 
 The user-supplied `bbd4f2f35943056e3b92ef3b766e70f3.mp4` replaces the opening photograph. The 15-second 720p video is copied without transcoding to `public/videos/hero.mp4`; its first frame provides the poster. The full four-view 16:9 composition is retained on all screen sizes. Captions move below the media so they cannot cover playback controls or demonstration content. Playback is muted and loops when in view; reduced-motion users retain manual controls. No other research figures or numerical content change. The protected Worker supports authenticated single byte ranges for browser loading, seeking and replay.
 

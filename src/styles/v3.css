@@ -29,111 +29,117 @@
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*::before,*::after{transition:none!important;animation:none!important}.reveal:not(.revealed){opacity:1;transform:none}}
 
 
-/* ROOM at home: warm daylight, a room-wide photograph and an open invitation. */
+/* The room fills the opening viewport; research content begins beneath it. */
+.nav { position: fixed; inset: 0 0 auto; width: 100%; transition: background .25s, color .25s, box-shadow .25s; }
+.nav:not(.compact) { background: transparent; border-color: #fff5e522; box-shadow: none; backdrop-filter: none; color: #fff9ef; }
+.nav:not(.compact) nav { color: #fff9ef; }
+.nav:not(.compact) nav a:hover { color: #e7bc90; }
+.nav:not(.compact) .logo-period { color: #e6b484; }
+.nav:not(.compact) .nav-paper { border-color: #fff7ea70; color: #fff9ef; background: #24170d18; }
+.nav:not(.compact) .nav-paper:hover { background: #ffffff1f; }
+.nav:not(.compact) .nav-paper svg { color: #f0ceb0; }
 .home-hero {
-  padding: 32px 40px 0;
-  background: radial-gradient(ellipse at 90% 0%, #f4e4ca70, transparent 58%), #fbf6ed;
-}
-.home-heading {
-  max-width: 1390px;
-  margin: 0 auto 28px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 40px;
-}
-.home-identity > .eyebrow { color: #8b654e; letter-spacing: .12em; }
-.home-identity h1 {
-  font: 500 clamp(100px, 11.4vw, 166px)/1 'DM Sans', Arial, sans-serif;
-  letter-spacing: -.09em;
-  color: #624432;
-  margin: 4px 0 10px -7px;
-}
-.home-identity h1 > span { color: #b76644; }
-.home-identity > p:last-child { font-size: 16px; color: #7d6654; }
-.home-invitation { padding: 10px 2vw 0 0; }
-.home-invitation > p { font: 400 clamp(28px, 3.1vw, 44px)/1.18 var(--serif); letter-spacing: -.035em; color: #5a4637; }
-.home-invitation em { color: #a46546; }
-.home-invitation > a { display: flex; gap: 48px; align-items: center; width: fit-content; margin-top: 22px; border-bottom: 1px solid #b99c7d; padding-bottom: 9px; font-size: 14px; color: #7f5037; }
-.home-invitation > a:hover { color: #ab4f31; border-color: currentColor; }
-.home-invitation > a > span { font-size: 21px; }
-.home-scene {
-  max-width: 1390px;
-  margin: auto;
+  padding: 0;
+  width: 100%;
+  height: 100vh;
+  height: 100svh;
+  min-height: 540px;
   position: relative;
   overflow: hidden;
-  border-radius: 18px 18px 5px 5px;
-  background: #ded0bb;
   isolation: isolate;
-  aspect-ratio: 3.1;
+  background: #30261d;
 }
-.home-scene > img, .home-scene > video { width: 100%; height: 100%; object-fit: cover; object-position: 50% 50%; }
-.home-scene figcaption { position: absolute; inset: auto 0 0; display: flex; align-items: end; justify-content: space-between; gap: 30px; padding: 65px 30px 24px; background: linear-gradient(transparent, #332a209c); color: #fff9ed; pointer-events: none; }
-.home-scene figcaption > span { font: italic 25px/1.2 var(--serif); }
-.home-scene figcaption > small { font: 12px/1.5 var(--mono); text-align: right; max-width: 270px; }
-.home-hero .hero-signal-strip { max-width: 1390px; margin: auto; padding-block: 23px; color: #7d6a58; }
-.home-hero .hero-signal-strip strong { color: #94583c; }
+.home-scene {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  overflow: hidden;
+}
+.home-scene > img, .home-scene > video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  object-fit: cover;
+  object-position: center;
+}
+.home-scene > video:fullscreen { object-fit: contain; background: #21170d; }
+.home-shade {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(180deg, #1e160e75 0%, #21170d05 25%, #21170d08 42%, #21170d80 72%, #21170dc7 100%);
+}
+.home-heading {
+  position: absolute;
+  z-index: 1;
+  bottom: clamp(82px, 10.5vh, 118px);
+  left: clamp(24px, 5.5vw, 100px);
+  right: clamp(24px, 5.5vw, 100px);
+  display: flex;
+  justify-content: space-between;
+  align-items: end;
+  gap: 50px;
+  color: #fff9ee;
+  pointer-events: none;
+}
+.home-identity > .eyebrow { color: #f3dec5; letter-spacing: .12em; }
+.home-identity h1 {
+  font: 500 clamp(118px, 14vw, 210px)/.98 'DM Sans', Arial, sans-serif;
+  letter-spacing: -.09em;
+  color: #fff9ee;
+  margin: 9px 0 15px -8px;
+}
+.home-identity h1 > span { color: #e6af7f; }
+.home-identity > p:last-child { font-size: 17px; line-height: 1.6; color: #f2e6d8; }
+.home-invitation { padding-bottom: 4px; }
+.home-invitation > p { font: 400 clamp(27px, 3vw, 44px)/1.18 var(--serif); letter-spacing: -.035em; color: #fff9ee; }
+.home-invitation em { color: #efc6a0; }
+.home-invitation > a { pointer-events: auto; display: flex; align-items: center; justify-content: space-between; gap: 45px; width: fit-content; min-width: 180px; margin-top: 25px; border-bottom: 1px solid #f0d2b78c; padding: 8px 0 12px; font-size: 14px; color: #fff9ee; }
+.home-invitation > a:hover { color: #efc6a0; border-color: currentColor; }
+.home-invitation > a > span { font-size: 22px; }
+.hero-signal-strip { background: #fbf6ed; }
 .research-intro h2 > span { color: #664733; }
 .gallery-stage { border-radius: 14px; }
 .gallery-picture { background: #e9dfd0; }
 .gallery-tabs button.selected { border-color: #ad7853; }
 .gallery-frame-label { background: #fff7eae8; color: #705039; }
 .study-data .segmented button.selected { color: #884b32; }
-@media (min-width: 1600px) {
-  .home-hero { padding-top: 44px; }
-  .home-heading { margin-bottom: 36px; }
-}
 @media (max-width: 1100px) {
-  .home-hero { padding: 28px 28px 0; }
   .home-heading { gap: 30px; }
-  .home-scene { aspect-ratio: 2.5; }
-  .home-scene figcaption > span { font-size: 23px; }
-  .home-invitation { padding-right: 0; }
+  .home-identity h1 { font-size: 14.5vw; }
+  .home-invitation > p { font-size: 32px; }
 }
 @media (max-width: 800px) {
-  .home-hero { padding: 26px 24px 0; }
-  .home-identity h1 { font-size: 108px; }
-  .home-identity > .eyebrow { font-size: 12px; letter-spacing: .04em; }
-  .home-identity > p:last-child { font-size: 14px; }
-  .home-invitation > p { font-size: 31px; }
-  .home-scene { aspect-ratio: 2.15; }
-  .home-scene figcaption { padding: 60px 24px 20px; }
-  .home-scene figcaption > small { max-width: 200px; }
+  .home-heading { left: 30px; right: 30px; gap: 25px; }
+  .home-identity h1 { font-size: 122px; }
+  .home-identity > .eyebrow { font-size: 12px; letter-spacing: .05em; }
+  .home-identity > p:last-child { font-size: 14px; max-width: 260px; }
+  .home-invitation > p { font-size: 28px; }
 }
 @media (max-width: 620px) {
-  .home-hero { padding: 26px 16px 0; }
-  .home-heading { display: block; margin-bottom: 24px; padding-inline: 7px; }
-  .home-identity h1 { font-size: clamp(98px, 28vw, 150px); margin-left: -5px; margin-bottom: 7px; }
-  .home-identity > .eyebrow { font-size: 12px; letter-spacing: .08em; }
-  .home-identity > p:last-child { font-size: 14px; }
-  .home-invitation { display: flex; align-items: end; justify-content: space-between; gap: 16px; padding-top: 25px; flex-wrap: wrap; }
-  .home-invitation > p { font-size: 25px; max-width: none; flex-basis: 100%; }
-  .home-invitation > a { font-size: 13px; gap: 14px; margin-top: 0; white-space: nowrap; padding-bottom: 5px; }
-  .home-scene { aspect-ratio: 1.16; border-radius: 14px 14px 4px 4px; }
-  .home-scene > img, .home-scene > video { object-position: 0% 50%; }
-  .home-scene figcaption { padding: 50px 18px 17px; display: block; }
-  .home-scene figcaption > span { display: block; font-size: 22px; max-width: 230px; }
-  .home-scene figcaption > small { display: block; font-size: 12px; text-align: left; max-width: 260px; margin-top: 9px; }
-  .home-hero .hero-signal-strip { font-size: 12px; gap: 10px; padding: 21px 4px; }
+  .nav:not(.compact) nav.open { color: #44362d; background: #fffaf3; }
+  .nav:not(.compact) nav.open a:hover { color: #a14e34; }
+  .home-hero { min-height: 600px; }
+  .home-scene > img, .home-scene > video { object-position: 15% center; }
+  .home-heading { display: block; left: 24px; right: 24px; bottom: 86px; }
+  .home-identity h1 { font-size: clamp(110px, 29vw, 160px); margin: 9px 0 12px -5px; }
+  .home-identity > .eyebrow { font-size: 12px; letter-spacing: .07em; }
+  .home-identity > p:last-child { font-size: 14px; max-width: none; }
+  .home-invitation { padding: 24px 0 0; }
+  .home-invitation > p { font-size: 28px; }
+  .home-invitation > a { margin-top: 18px; min-width: 168px; font-size: 14px; }
+  .home-shade { background: linear-gradient(180deg, #21170d85 0%, #21170d05 22%, #21170d45 42%, #21170da8 70%, #21170dc9 100%); }
 }
-@media (max-width: 370px) {
-  .home-invitation { display: block; }
-  .home-invitation > a { margin-top: 15px; }
-}
-
-
-/* Preserve all four views of the demo and keep captions clear of video controls. */
-.home-scene--video { aspect-ratio: auto; }
-.home-scene--video > video, .home-scene--video > img {
-  width: 100%; height: auto; aspect-ratio: 16 / 9;
-  object-fit: contain; object-position: center; background: #29241e;
-}
-.home-scene--video figcaption {
-  position: static; padding: 18px 24px; background: #f1e7d8;
-  color: #674934; align-items: center;
-}
-@media (max-width: 620px) {
-  .home-scene--video figcaption { padding: 16px 18px; }
-  .home-scene--video figcaption > span { font-size: 21px; max-width: none; }
-  .home-scene--video figcaption > small { max-width: none; }
+@media (max-height: 650px) and (min-width: 621px) {
+  .home-hero { min-height: 460px; }
+  .home-heading { bottom: 70px; }
+  .home-identity h1 { font-size: 130px; }
 }

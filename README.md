@@ -5,7 +5,7 @@ A responsive, research-first project page for **ROOM: A Human–Humanoid Interac
 
 ## Design versions
 
-- **Version 3 (current):** a warm home-centered design: large ROOM identity, a bright room-wide experiment photograph, cream surfaces, walnut type, terracotta accents and an interactive task gallery. Inspired by the research reading rhythm of Behavior Robot Suite; visual composition and assets are ROOM’s own.
+- **Version 3 (current):** a warm home-centered design: large ROOM identity, a full-screen household video with overlaid titles, cream surfaces, walnut type, terracotta accents and an interactive task gallery. Inspired by the research reading rhythm of Behavior Robot Suite; visual composition and assets are ROOM’s own.
 - **Version 2 (preserved):** silver-blue hero, a nonverbal-to-action diagram, alternating light research panels and deep-blue technical sections. Its protected Worker snapshot is in `archive/versions/v2/`; source is tagged `v2`.
 - **Version 1 (preserved):** the original charcoal/orange design, kept offline. The complete static snapshot is in `archive/versions/v1/`; its source is tagged `v1` in Git.
 
@@ -53,7 +53,7 @@ The manuscript is not shared in this preview: `project.links.paper` is null, and
 
 ## Assets and videos
 
-The homepage now plays the supplied 15-second, 1280 × 720 H.264 video at `public/videos/hero.mp4`. It is muted, loops automatically while visible, and keeps native pause/fullscreen controls. All four views are displayed at 16:9 on desktop and mobile. Its poster is the first frame of that same video. Video requests, including byte ranges for playback and seeking, remain password protected. The original uploaded file remains untouched in the workspace.
+The homepage now plays the supplied 15-second, 1280 × 720 H.264 video at `public/videos/hero.mp4`. It is muted, loops automatically while visible, and keeps native pause/fullscreen controls. The video fills the first viewport edge to edge, with ROOM and navigation overlaid. Cover sizing adapts to the screen; portrait and very wide screens crop the sides or top/bottom. Native fullscreen playback remains available for the complete composition. Its poster is the first frame of that same video. Video requests, including byte ranges for playback and seeking, remain password protected. The original uploaded file remains untouched in the workspace.
 
 - `public/assets/`: optimized WebP crops extracted from the PDF; no generated or unrelated robotics imagery.
 - `public/fonts/`: self-hosted DM Sans and IBM Plex Mono plus their OFL licenses.

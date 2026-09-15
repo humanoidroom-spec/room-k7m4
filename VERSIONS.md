@@ -30,4 +30,4 @@ The snapshot contains the complete protected Worker and hosting manifest from th
 
 ## Version 3
 
-V3 uses an inviting ROOM identity, a bright household photograph, cream and wood tones, a centered research introduction and a four-task gallery. The initial teal V3 remains in Git history at `88b8e8ffb964ef91471fea64dd843307430d73c0`. The scientific data, server-side password, asset protection and manuscript exclusion are retained. The existing shared password is unchanged.
+V3 uses an inviting ROOM identity, a full-screen household video, cream and wood tones, a centered research introduction and a four-task gallery. The initial teal V3 remains in Git history at `88b8e8ffb964ef91471fea64dd843307430d73c0`. The scientific data, server-side password, asset protection and manuscript exclusion are retained. The existing shared password is unchanged.
