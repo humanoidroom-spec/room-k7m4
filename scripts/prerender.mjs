@@ -8,7 +8,9 @@ const server = await createServer({ server: { middlewareMode: true }, appType: '
 try {
   const { default: App } = await server.ssrLoadModule('/src/App.tsx');
   const markup = renderToString(createElement(App));
-  const path = new URL('../tmp/public-client/index.html', import.meta.url);
+  const path = process.argv[2]
+    ? new URL(`../${process.argv[2].replaceAll('\\', '/')}`, import.meta.url)
+    : new URL('../tmp/public-client/index.html', import.meta.url);
   const html = await readFile(path, 'utf8');
   if (!html.includes('<div id="root"></div>')) throw new Error('Missing prerender root');
   await writeFile(path, html.replace('<div id="root"></div>', `<div id="root">${markup}</div>`));

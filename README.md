@@ -29,6 +29,17 @@ npm run preview
 
 `dist/server/index.js` is the complete Cloudflare-compatible Worker. The page is prerendered and bundled together with its allowed images, scripts and fonts inside the Worker; there is no separately served static directory. The current page and its required assets are public. PDFs, old versions and local source files are excluded from the deployment.
 
+## GitHub Pages deployment
+
+The primary public website is deployed to [GitHub Pages](https://humanoidroom-spec.github.io/room-k7m4/) from the `main` branch. The `Deploy GitHub Pages` workflow installs dependencies, creates a prerendered static build, checks the publishable output, and deploys it automatically after every push.
+
+```bash
+npm run build:pages
+npm run test:pages
+```
+
+The static output is written to `dist/`. Relative asset paths keep the website working under the repository path `/room-k7m4/`. The offline manuscript and archived website versions remain outside the published output.
+
 ## Public access
 
 The deployed site is intentionally public and read-only. Visitors can open the research page and its required images, scripts, fonts and videos without a password or sign-in. The Worker serves only the current-design asset inventory; it does not expose arbitrary project files.
